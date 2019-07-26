@@ -1,19 +1,19 @@
 import pickle
 import os
 from project.plant_def import Plants
-from functools import partial
 
 
-def store_data(store_object):
+def store_data(list_of_plants):
     filename = "plants.bin"
     outfile = open(filename, 'ab')
-    pickle.dump(store_object.common_name, outfile)
-    pickle.dump(store_object.botanical_name, outfile)
-    pickle.dump(store_object.sun_exposure, outfile)
-    pickle.dump(store_object.water, outfile)
-    pickle.dump(store_object.soil, outfile)
-    pickle.dump(store_object.repotting, outfile)
-    pickle.dump(store_object.size, outfile)
+    for store_object in list_of_plants:
+        pickle.dump(store_object.common_name, outfile)
+        pickle.dump(store_object.botanical_name, outfile)
+        pickle.dump(store_object.sun_exposure, outfile)
+        pickle.dump(store_object.water, outfile)
+        pickle.dump(store_object.soil, outfile)
+        pickle.dump(store_object.repotting, outfile)
+        pickle.dump(store_object.size, outfile)
     outfile.close()
 
 
@@ -36,3 +36,9 @@ def load_data(list_of_plants):
             except EOFError:
                 break
         infile.close()
+
+
+def clear_file():
+    filename = "plants.bin"
+    outfile = open(filename, 'wb')
+    outfile.close()
