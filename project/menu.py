@@ -2,7 +2,7 @@ from project.plant_list import add_new_plant
 from project.plant_list import print_list
 
 
-def choice (list_of_plants):
+def choice(list_of_plants):
     while True:
         answer = input("Would you like to add a new plant? (Y/N): ")
         if answer == "Y":
