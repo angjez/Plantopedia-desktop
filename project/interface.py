@@ -1,16 +1,23 @@
-from project.plant_list import list_of_plants
-from project.plant_list import add_new_plant
+from project.menu import choice
+from project.plant_list import print_list
+from project.pickle_data import load_data
+from project.plant_def import Plants
 import time
 import sys
 
-if not list_of_plants:
-    print("You have no plants saved")
-    time.sleep(2)
-    answer = input("Would you like to add a new plant? (Y/N): ")
-    if answer == "Y":
-        add_new_plant()
-    elif answer == "N":
-        print("Thank you for using Plantopedia")
-        sys.exit(0)
-    else:
-        print("Wrong input")
+
+def main():
+    list_of_plants = []
+    load_data(list_of_plants)
+
+    if not list_of_plants:
+        print("You have no plants saved")
+        time.sleep(1)
+        choice(list_of_plants)
+
+    if list_of_plants:
+        print_list(list_of_plants)
+        choice(list_of_plants)
+
+
+main()
