@@ -3,17 +3,18 @@
 
 def main():
     from project.menu import choice
-    from project.plant_list import ListOfPlants
     from project.pickle_data import load_data
     from project.pickle_data import store_data
     from project.pickle_data import clear_file
+    from project.plant_list import ListOfPlants
 
-    load_data()
+    list_of_plants = ListOfPlants()
+    load_data(list_of_plants)
 
-    choice()
+    choice(list_of_plants)
 
     clear_file()
-    store_data()
+    store_data(list_of_plants.list)
 
 
 main()

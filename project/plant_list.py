@@ -2,29 +2,30 @@ from project.plant_def import Plant
 
 
 class ListOfPlants:
-    list_of_plants = []
+    def __init__(self):
+        self.list = []
 
-    @staticmethod
-    def add_new_plant(list_of_plants):
+    def add_new_plant(self):
         new_plant = Plant(input("Common name: "), input("Botanical name: "), input("Sun exposure: "), input("Water: "), input("Soil: "), input("Repotting: "), input("Size: "))
-        list_of_plants.append(new_plant)
+        self.list.append(new_plant)
 
-    @staticmethod
-    def print_list(list_of_plants):
-        if list_of_plants:
+    def add_defined_plant(self, defined_plant):
+        self.list.append(defined_plant)
+
+    def print_list(self):
+        if self.list:
             print("Your plants: ")
             print("")
-            for plant in range(len(list_of_plants)):
-                list_of_plants[plant].print_variables()
+            for plant in range(len(self.list)):
+                self.list[plant].print_variables()
                 print("")
         else:
             print("You have no saved plants.")
 
-    @staticmethod
-    def delete_from_list (list_of_plants, to_delete):
-        for plant in list_of_plants:
+    def delete_from_list(self, to_delete):
+        for plant in self.list:
             if plant.common_name == to_delete:
-                list_of_plants.remove(plant)
+                self.list.remove(plant)
                 return True
         return False
 
