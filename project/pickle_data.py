@@ -4,10 +4,10 @@ from project.plant_def import Plant
 from project.plant_list import ListOfPlants
 
 
-def store_data():
+def store_data(list_of_plants):
     filename = "plants.bin"
     outfile = open(filename, 'ab')
-    for store_object in ListOfPlants.list_of_plants:
+    for store_object in list_of_plants:
         pickle.dump(store_object.common_name, outfile)
         pickle.dump(store_object.botanical_name, outfile)
         pickle.dump(store_object.sun_exposure, outfile)
@@ -18,7 +18,7 @@ def store_data():
     outfile.close()
 
 
-def load_data():
+def load_data(list_of_plants):
     filename = "plants.bin"
     my_path = "./plants.bin"
     if os.path.exists(my_path) and os.path.getsize(my_path) > 0:
@@ -33,7 +33,7 @@ def load_data():
                 repotting = pickle.load(infile)
                 size = pickle.load(infile)
                 plant = Plant(common_name, botanical_name, sun_exposure, water, soil, repotting, size)
-                ListOfPlants.list_of_plants.append(plant)
+                list_of_plants.add_defined_plant(plant)
             except EOFError:
                 break
         infile.close()
