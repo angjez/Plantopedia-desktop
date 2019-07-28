@@ -29,4 +29,10 @@ class ListOfPlants:
                 return True
         return False
 
+    def amount_of_plants(self):
+        return len(self.list)
+
+    def get_common_name_list(self):
+        return self.get_common_name_list()
+
 

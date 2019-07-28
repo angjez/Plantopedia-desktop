@@ -16,3 +16,6 @@ class Plant:
         print("Soil: " + str(self.soil))
         print("Repotting: " + str(self.repotting))
         print("Size: " + str(self.size))
+
+    def get_common_name(self):
+        return self.common_name
