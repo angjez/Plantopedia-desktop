@@ -6,6 +6,43 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 
 
+class MenuBoxes(BoxLayout):
+    def __init__(self, **kwargs):
+        super(MenuBoxes, self).__init__(**kwargs)
+        self.orientation = "horizontal"
+
+        add_button = Button(text="Add", size_hint=(.1, .1))
+        delete_button = Button(text="Delete", size_hint=(.1, .1))
+        edit_button = Button(text="Edit", size_hint=(.1, .1))
+        self.add_widget(add_button)
+        self.add_widget(delete_button)
+        self.add_widget(edit_button)
+
+
+class PlantBoxes(BoxLayout):
+
+    def __init__(self, list_of_plants, **kwargs):
+        super(PlantBoxes, self).__init__(**kwargs)
+        self.orientation = "vertical"
+
+        button = []
+
+        for n in range(len(list_of_plants.list)):
+            button.append(Button(text=list_of_plants.list[n].common_name))
+            self.add_widget(button[n])
+
+
+class MainBoxes(BoxLayout):
+
+    def __init__(self, list_of_plants, **kwargs):
+        super(MainBoxes, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        plant_boxes = PlantBoxes(list_of_plants)
+        menu_boxes = MenuBoxes()
+        self.add_widget(plant_boxes)
+        self.add_widget(menu_boxes)
+
+
 class MainApp(App):
     def build(self):
         from project.pickle_data import load_data
@@ -16,34 +53,10 @@ class MainApp(App):
         list_of_plants = ListOfPlants()
         load_data(list_of_plants)
 
-        boxes_combined = BoxLayout(orientation='vertical')
-
-        # horizontal boxes (menu)
-        menu_box = BoxLayout(orientation='horizontal')
-
-        add_button = Button(text="Add", size_hint=(.1, .1))
-        delete_button = Button(text="Delete", size_hint=(.1, .1))
-        edit_button = Button(text="Edit", size_hint=(.1, .1))
-        menu_box.add_widget(add_button)
-        menu_box.add_widget(delete_button)
-        menu_box.add_widget(edit_button)
-
-        # vertical boxes (plant names)
-        plant_box = BoxLayout(orientation='vertical')
-        button = []
-
-        for n in range(len(list_of_plants.list)):
-            button.append(Button(text=list_of_plants.list[n].common_name))
-            plant_box.add_widget(button[n])
-
-        # combining boxes together
-        boxes_combined.add_widget(plant_box)
-        boxes_combined.add_widget(menu_box)
-
         clear_file()
         store_data(list_of_plants.list)
 
-        return boxes_combined
+        return MainBoxes(list_of_plants)
 
 
 if __name__ == '__main__':
