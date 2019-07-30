@@ -3,10 +3,10 @@ kivy.require('1.11.0')
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.window import Window
 
 
 # main menu layouts
@@ -25,15 +25,6 @@ class MenuBoxes(BoxLayout):
 
         for but in [add_button, delete_button, edit_button]:
             self.add_widget(but)
-
-    def event_add_plant(self, obj):
-        print("Typical event from", obj)
-
-    def event_delete_plant(self, obj):
-        print("Typical event from", obj)
-
-    def event_edit_plant(self, obj):
-        print("Typical event from", obj)
 
 
 class PlantBoxes(BoxLayout):
@@ -71,13 +62,13 @@ class MainBoxes(BoxLayout):
 # plant screen layouts
 
 
-class PlantProperties(GridLayout):
+class PlantProperties(BoxLayout):
 
-    def __init__(self, plant, **kwargs):
+    def __init__(self, plant, sm, **kwargs):
 
         super(PlantProperties, self).__init__(**kwargs)
 
-        self.cols = 2
+        self.orientation = "vertical"
 
         common_name_label = Label(text=plant.common_name)
         self.add_widget(common_name_label)
@@ -100,6 +91,24 @@ class PlantProperties(GridLayout):
         size_label = Label(text=plant.size)
         self.add_widget(size_label)
 
+        menu_boxes = PlantMenuBoxes(sm)
+        self.add_widget(menu_boxes)
+
+
+class PlantMenuBoxes(BoxLayout):
+    def __init__(self, sm, **kwargs):
+        super(PlantMenuBoxes, self).__init__(**kwargs)
+        self.orientation = "horizontal"
+
+        back_button = Button(text="Back", size_hint=(.1, .3))
+        back_button.bind(on_press=lambda x: Manager.switch_screens(sm, "Menu"))
+
+        delete_button = Button(text="Delete", size_hint=(.1, .3))
+
+        edit_button = Button(text="Edit", size_hint=(.1, .3))
+
+        for but in [back_button, delete_button, edit_button]:
+            self.add_widget(but)
 
 # screens
 
@@ -115,7 +124,7 @@ class Manager(ScreenManager):
         self.current = "Menu"
 
     def create_plant_screen(self, plant):
-        self.list.append(PlantScreen(plant))
+        self.list.append(PlantScreen(plant, self))
         self.names.append(plant.common_name)
 
     def push_plant_screens(self):
@@ -137,9 +146,9 @@ class MenuScreen(Screen):
 
 class PlantScreen(Screen):
 
-    def __init__(self, plant, **kwargs):
+    def __init__(self, plant, sm, **kwargs):
         super(PlantScreen, self).__init__(**kwargs)
-        plant_page = PlantProperties(plant)
+        plant_page = PlantProperties(plant, sm)
         self.add_widget(plant_page)
 
 
