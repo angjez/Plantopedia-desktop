@@ -37,7 +37,7 @@ class MenuBoxes(BoxLayout):
 
 class PlantBoxes(BoxLayout):
 
-    def __init__(self, list_of_plants, **kwargs):
+    def __init__(self, list_of_plants, sm, **kwargs):
         super(PlantBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
         button = []
@@ -45,16 +45,16 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(button[n])
-            button_event = PlantProperties(list_of_plants.list[n])
-            button[n].bind(on_press=button_event)
+            button[n].bind(on_press=lambda x: Manager.add_plant_screen_and_switch(sm, list_of_plants.list[n]))
+            # button[n].bind(on_press=Manager.add_plant_screen(sm, list_of_plants.list[n]))
 
 
 class MainBoxes(BoxLayout):
 
-    def __init__(self, list_of_plants, **kwargs):
+    def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
-        plant_boxes = PlantBoxes(list_of_plants)
+        plant_boxes = PlantBoxes(list_of_plants, sm)
         menu_boxes = MenuBoxes()
         self.add_widget(plant_boxes)
         self.add_widget(menu_boxes)
@@ -87,8 +87,6 @@ class PlantProperties(StackLayout):
         # size_label = plant.size
         # self.add_widget(size_label)
 
-        Manager.create_screen_and_switch(plant)
-
 
 # screens
 
@@ -97,17 +95,20 @@ class Manager(ScreenManager):
 
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
-        self.add_widget(MenuScreen(list_of_plants, name='Menu'))
+        self.add_widget(MenuScreen(list_of_plants, self))
+        MenuScreen.name = "Menu"
 
-    def create_screen_and_switch(self, plant):
-        self.add_widget(PlantScreen(plant, name=plant.common_name))
+    def add_plant_screen_and_switch(self, plant):
+        self.add_widget(PlantScreen(plant))
+        PlantScreen.name = plant.common_name
+        self.current = plant.common_name
 
 
 class MenuScreen(Screen):
 
-    def __init__(self, list_of_plants, **kwargs):
+    def __init__(self, list_of_plants, sm, **kwargs):
         super(MenuScreen, self).__init__(**kwargs)
-        menu_page = MainBoxes(list_of_plants)
+        menu_page = MainBoxes(list_of_plants, sm)
         self.add_widget(menu_page)
 
 
@@ -125,7 +126,6 @@ class MainApp(App):
         from project.pickle_data import store_data
         from project.pickle_data import clear_file
         from project.plant_list import ListOfPlants
-        from project.plant_def import Plant
 
         self.title = "Plantopedia"
 
