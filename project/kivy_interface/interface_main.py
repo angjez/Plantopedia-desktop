@@ -5,6 +5,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -45,8 +46,13 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(button[n])
-            button[n].bind(on_press=lambda x: Manager.add_plant_screen_and_switch(sm, list_of_plants.list[n]))
-            # button[n].bind(on_press=Manager.add_plant_screen(sm, list_of_plants.list[n]))
+            Manager.add_plant_screen(sm, list_of_plants.list[n])
+
+        Manager.create_plant_screens(sm)
+
+        for n in range(len(button)):
+            button[n].bind(on_press=lambda x: Manager.switch_screens(sm, n))
+            # list_of_plants.list[n]
 
 
 class MainBoxes(BoxLayout):
@@ -60,32 +66,34 @@ class MainBoxes(BoxLayout):
         self.add_widget(menu_boxes)
 
 
-class PlantProperties(StackLayout):
+class PlantProperties(BoxLayout):
 
     def __init__(self, plant, **kwargs):
 
         super(PlantProperties, self).__init__(**kwargs)
 
-        # common_name_label = plant.common_name
-        # self.add_widget(common_name_label)
-        #
-        # botanical_name_label = plant.botanical_name
-        # self.add_widget(botanical_name_label)
-        #
-        # sun_exposure_label = plant.sun_exposure
-        # self.add_widget(sun_exposure_label)
-        #
-        # water_label = plant.water
-        # self.add_widget(water_label)
-        #
-        # soil_label = plant.soil
-        # self.add_widget(soil_label)
-        #
-        # repotting_label = plant.repotting
-        # self.add_widget(repotting_label)
-        #
-        # size_label = plant.size
-        # self.add_widget(size_label)
+        self.orientation = "vertical"
+
+        common_name_label = Label(text=plant.common_name)
+        self.add_widget(common_name_label)
+
+        botanical_name_label = Label(text=plant.botanical_name)
+        self.add_widget(botanical_name_label)
+
+        sun_exposure_label = Label(text=plant.sun_exposure)
+        self.add_widget(sun_exposure_label)
+
+        water_label = Label(text=plant.water)
+        self.add_widget(water_label)
+
+        soil_label = Label(text=plant.soil)
+        self.add_widget(soil_label)
+
+        repotting_label = Label(text=plant.repotting)
+        self.add_widget(repotting_label)
+
+        size_label = Label(text=plant.size)
+        self.add_widget(size_label)
 
 
 # screens
@@ -95,13 +103,21 @@ class Manager(ScreenManager):
 
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
+        self.list = []
         self.add_widget(MenuScreen(list_of_plants, self))
         MenuScreen.name = "Menu"
+        self.current = "Menu"
 
-    def add_plant_screen_and_switch(self, plant):
-        self.add_widget(PlantScreen(plant))
-        PlantScreen.name = plant.common_name
-        self.current = plant.common_name
+    def add_plant_screen(self, plant):
+        self.list.append(PlantScreen(plant))
+
+    def create_plant_screens(self):
+        for n in range(len(self.list)):
+            self.add_widget(self.list[n])
+            self.list[n].name = ("%d" % n)
+
+    def switch_screens(self, name):
+        self.current = ("%d" % name)
 
 
 class MenuScreen(Screen):
