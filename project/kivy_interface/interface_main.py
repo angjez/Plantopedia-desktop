@@ -6,7 +6,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.core.window import Window
 
 
 # main menu layouts
@@ -37,15 +36,18 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(button[n])
-            # screen manager creates a corresponding a screen for each button created
-            Manager.create_plant_screen(sm, list_of_plants.list[n])
 
         # screen manager adds all of the screens
-        Manager.push_plant_screens(sm)
+        Manager.push_plant_screens(sm, list_of_plants.list)
 
         # assigning screens to buttons
-        for n in range(len(button)):
-            button[n].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[n].common_name))
+        for n in range(len(list_of_plants.list)):
+            # button[n].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[n].common_name))
+            button[n].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[n].common_name)
+        # button[1].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[1].common_name))
+        # button[2].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[2].common_name))
+        # button[3].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[3].common_name))
+
 
 
 class MainBoxes(BoxLayout):
@@ -65,7 +67,6 @@ class MainBoxes(BoxLayout):
 class PlantProperties(BoxLayout):
 
     def __init__(self, plant, sm, **kwargs):
-
         super(PlantProperties, self).__init__(**kwargs)
 
         self.orientation = "vertical"
@@ -101,7 +102,7 @@ class PlantMenuBoxes(BoxLayout):
         self.orientation = "horizontal"
 
         back_button = Button(text="Back", size_hint=(.1, .3))
-        back_button.bind(on_press=lambda x: Manager.switch_screens(sm, "Menu"))
+        back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         delete_button = Button(text="Delete", size_hint=(.1, .3))
 
@@ -118,22 +119,23 @@ class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
         self.list = []
-        self.names = []
+        self.screen = []
         self.add_widget(MenuScreen(list_of_plants, self))
         MenuScreen.name = "Menu"
         self.current = "Menu"
 
-    def create_plant_screen(self, plant):
-        self.list.append(PlantScreen(plant, self))
-        self.names.append(plant.common_name)
+    def push_plant_screens(self, list_of_plants):
+        for n in range(len(list_of_plants)):
+            self.list.append(PlantProperties(list_of_plants[n], self))
+            self.screen.append(Screen(name=list_of_plants[n].common_name))
+            self.screen[n].add_widget(self.list[n])
+            self.add_widget(self.screen[n])
 
-    def push_plant_screens(self):
-        for n in range(len(self.list)):
-            self.add_widget(self.list[n])
-            self.list[n].name = self.names[n]
-
-    def switch_screens(self, name):
+    def switch_screens(self, name, obj):
         self.current = name
+
+    def goto_menu(self):
+        self.current = "Menu"
 
 
 class MenuScreen(Screen):
@@ -142,14 +144,6 @@ class MenuScreen(Screen):
         super(MenuScreen, self).__init__(**kwargs)
         menu_page = MainBoxes(list_of_plants, sm)
         self.add_widget(menu_page)
-
-
-class PlantScreen(Screen):
-
-    def __init__(self, plant, sm, **kwargs):
-        super(PlantScreen, self).__init__(**kwargs)
-        plant_page = PlantProperties(plant, sm)
-        self.add_widget(plant_page)
 
 
 class MainApp(App):
