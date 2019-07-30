@@ -3,13 +3,13 @@ kivy.require('1.11.0')
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.stacklayout import StackLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
-# layouts
+# main menu layouts
 
 
 class MenuBoxes(BoxLayout):
@@ -46,13 +46,15 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(button[n])
-            Manager.add_plant_screen(sm, list_of_plants.list[n])
+            # screen manager creates a corresponding a screen for each button created
+            Manager.create_plant_screen(sm, list_of_plants.list[n])
 
-        Manager.create_plant_screens(sm)
+        # screen manager adds all of the screens
+        Manager.push_plant_screens(sm)
 
+        # assigning screens to buttons
         for n in range(len(button)):
-            button[n].bind(on_press=lambda x: Manager.switch_screens(sm, n))
-            # list_of_plants.list[n]
+            button[n].bind(on_press=lambda x: Manager.switch_screens(sm, list_of_plants.list[n].common_name))
 
 
 class MainBoxes(BoxLayout):
@@ -66,13 +68,16 @@ class MainBoxes(BoxLayout):
         self.add_widget(menu_boxes)
 
 
-class PlantProperties(BoxLayout):
+# plant screen layouts
+
+
+class PlantProperties(GridLayout):
 
     def __init__(self, plant, **kwargs):
 
         super(PlantProperties, self).__init__(**kwargs)
 
-        self.orientation = "vertical"
+        self.cols = 2
 
         common_name_label = Label(text=plant.common_name)
         self.add_widget(common_name_label)
@@ -104,20 +109,22 @@ class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
         self.list = []
+        self.names = []
         self.add_widget(MenuScreen(list_of_plants, self))
         MenuScreen.name = "Menu"
         self.current = "Menu"
 
-    def add_plant_screen(self, plant):
+    def create_plant_screen(self, plant):
         self.list.append(PlantScreen(plant))
+        self.names.append(plant.common_name)
 
-    def create_plant_screens(self):
+    def push_plant_screens(self):
         for n in range(len(self.list)):
             self.add_widget(self.list[n])
-            self.list[n].name = ("%d" % n)
+            self.list[n].name = self.names[n]
 
     def switch_screens(self, name):
-        self.current = ("%d" % name)
+        self.current = name
 
 
 class MenuScreen(Screen):
