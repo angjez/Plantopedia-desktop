@@ -1,7 +1,6 @@
 import pickle
 import os
-from project.plant_def import Plant
-from project.plant_list import ListOfPlants
+from project.app.plant_def import Plant
 
 
 def store_data(list_of_plants):

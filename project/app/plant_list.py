@@ -1,4 +1,4 @@
-from project.plant_def import Plant
+from project.app.plant_def import Plant
 
 
 class ListOfPlants:

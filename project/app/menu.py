@@ -1,4 +1,4 @@
-from project.plant_list import ListOfPlants
+from project.app.plant_list import ListOfPlants
 import time
 
 
