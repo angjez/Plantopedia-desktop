@@ -58,16 +58,12 @@ class AddPlant(Screen):
 class MainApp(App):
     def build(self):
         from project.app.pickle_data import load_data
-        from project.app.pickle_data import store_data
-        from project.app.pickle_data import clear_file
         from project.app.plant_list import ListOfPlants
 
         self.title = "Plantopedia"
 
         list_of_plants = ListOfPlants()
         load_data(list_of_plants)
-        clear_file()
-        store_data(list_of_plants.list)
 
         return Manager(list_of_plants)
 

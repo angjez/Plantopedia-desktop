@@ -182,6 +182,8 @@ class Input(BoxLayout):
             self.interpret_data(list_of_plants, sm)
 
     def interpret_data(self, list_of_plants, sm):
+        from project.app.pickle_data import store_data
+        from project.app.pickle_data import clear_file
         sorted_data = [None] * 7
         for n in range(len(self.order_tracker)):
             for m in range(len(self.input_fields)):
@@ -190,4 +192,7 @@ class Input(BoxLayout):
         new_plant = Plant(sorted_data[0], sorted_data[1], sorted_data[2], sorted_data[3], sorted_data[4],
                           sorted_data[5], sorted_data[6])
         ListOfPlants.add_defined_plant(list_of_plants, new_plant)
+        # the list was changed, so it's necessary to update the file
+        clear_file()
+        store_data(list_of_plants.list)
         Manager.goto_menu(sm)
