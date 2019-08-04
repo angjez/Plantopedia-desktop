@@ -2,9 +2,7 @@ import kivy
 kivy.require('1.11.0')
 
 from kivy.app import App
-# from kivy.uix.boxlayout import BoxLayout
-# from kivy.uix.button import Button
-# from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -16,7 +14,8 @@ class Manager(ScreenManager):
         super(Manager, self).__init__(**kwargs)
         self.list = []
         self.screen = []
-        self.add_widget(MenuScreen(list_of_plants, self))
+        menu_screen = MenuScreen(list_of_plants, self)
+        self.add_widget(menu_screen)
         MenuScreen.name = "Menu"
         self.current = "Menu"
 
@@ -34,15 +33,8 @@ class Manager(ScreenManager):
     def goto_menu(self):
         self.current = "Menu"
 
-    #     removing the old main screen and creating a new one with the updated list of plants
-    def update_menu(self, list_of_plants):
-        self.remove_widget(MenuScreen)
-        self.add_widget(MenuScreen(list_of_plants, self))
-        MenuScreen.name = "Menu"
-        self.current = "Menu"
-
-    def add_plant_screen(self, obj):
-        self.add_widget(AddPlant())
+    def add_plant_screen(self, list_of_plants, obj):
+        self.add_widget(AddPlant(self, list_of_plants))
         AddPlant.name = "Add plant"
         self.current = "Add plant"
 
@@ -56,11 +48,12 @@ class MenuScreen(Screen):
 
 
 class AddPlant(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, sm, list_of_plants, **kwargs):
         super(AddPlant, self).__init__(**kwargs)
         from project.kivy_interface.layouts import NewPlant
-        new_plant_page = NewPlant()
+        new_plant_page = NewPlant(list_of_plants, sm)
         self.add_widget(new_plant_page)
+
 
 class MainApp(App):
     def build(self):

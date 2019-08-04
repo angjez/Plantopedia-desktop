@@ -5,6 +5,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from project.kivy_interface.interface_main import Manager
 from kivy.uix.textinput import TextInput
+from project.app.plant_list import ListOfPlants
+from project.app.plant_def import Plant
 
 
 class MenuBoxes(BoxLayout):
@@ -13,7 +15,7 @@ class MenuBoxes(BoxLayout):
         self.orientation = "horizontal"
 
         add_button = Button(text="Add", size_hint=(.1, .1))
-        add_button.fbind('on_press', Manager.add_plant_screen, sm)
+        add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants)
 
         delete_button = Button(text="Delete", size_hint=(.1, .1))
 
@@ -28,18 +30,23 @@ class PlantBoxes(BoxLayout):
     def __init__(self, list_of_plants, sm, **kwargs):
         super(PlantBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
-        button = []
+        self.button = []
 
         for n in range(len(list_of_plants.list)):
-            button.append(Button(text=list_of_plants.list[n].common_name))
-            self.add_widget(button[n])
+            self.button.append(Button(text=list_of_plants.list[n].common_name))
+            self.add_widget(self.button[n])
 
         # screen manager adds all of the screens for the buttons
         Manager.push_plant_screens(sm, list_of_plants.list)
 
         # assigning screens to buttons
         for n in range(len(list_of_plants.list)):
-            button[n].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[n].common_name)
+            self.button[n].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[n].common_name)
+
+    def new_button(self, list_of_plants, sm):
+        self.button.append(Button(text=list_of_plants.list[-1].common_name))
+        self.button[-1].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[-1].common_name)
+        return self.button[-1]
 
 
 class MainBoxes(BoxLayout):
@@ -112,11 +119,11 @@ class PlantMenuBoxes(BoxLayout):
 
 class NewPlant(BoxLayout):
 
-    def __init__(self, **kwargs):
+    def __init__(self, list_of_plants, sm,  **kwargs):
         super(NewPlant, self).__init__(**kwargs)
         self.orientation = "horizontal"
         self.add_widget(InputLabels())
-        self.add_widget(Input())
+        self.add_widget(Input(list_of_plants, sm))
 
 
 class InputLabels(BoxLayout):
@@ -147,31 +154,40 @@ class InputLabels(BoxLayout):
 
 
 class Input(BoxLayout):
-    def __init__(self, **kwargs):
+    def __init__(self, list_of_plants, sm, **kwargs):
         super(Input, self).__init__(**kwargs)
         self.orientation = "vertical"
 
-        def on_enter(instance, value):
-            print('User pressed enter in', instance)
+        self.input_fields = []
+        self.collected_input = []
+        self.order_tracker = []
 
-        self.common_name_input = TextInput(multiline=False)
-        self.add_widget(self.common_name_input)
+        for n in range(0, 7):
+            self.input_fields.append(TextInput(multiline=False, hint_text_color=(0, 0, 0, 0.5)))
+            self.add_widget(self.input_fields[n])
+            self.input_fields[n].fbind('on_text_validate', self.on_text, list_of_plants=list_of_plants, sm=sm)
 
-        self.botanical_name_input = TextInput(multiline=False)
-        self.add_widget(self.botanical_name_input)
+        self.input_fields[0].hint_text = "common name"
+        self.input_fields[1].hint_text = "botanical name"
+        self.input_fields[2].hint_text = "sun exposure"
+        self.input_fields[3].hint_text = "water"
+        self.input_fields[4].hint_text = "soil"
+        self.input_fields[5].hint_text = "repotting"
+        self.input_fields[6].hint_text = "size"
 
-        self.sun_exposure_input = TextInput(multiline=False)
-        self.add_widget(self.sun_exposure_input)
+    def on_text(self, value, list_of_plants, sm):
+        self.collected_input.append(value.text)
+        self.order_tracker.append(value.hint_text)
+        if len(self.collected_input) == 7:
+            self.interpret_data(list_of_plants, sm)
 
-        self.water_input = TextInput(multiline=False)
-        self.add_widget(self.water_input)
-
-        self.soil_input = TextInput(multiline=False)
-        self.add_widget(self.soil_input)
-
-        self.repotting_input = TextInput(multiline=False)
-        self.add_widget(self.repotting_input)
-
-        self.size_input = TextInput(multiline=False)
-        self.add_widget(self.size_input)
-        # textinput.bind(on_text_validate=on_enter)
+    def interpret_data(self, list_of_plants, sm):
+        sorted_data = [None] * 7
+        for n in range(len(self.order_tracker)):
+            for m in range(len(self.input_fields)):
+                if self.order_tracker[n] == self.input_fields[m].hint_text:
+                    sorted_data[m] = self.collected_input[n]
+        new_plant = Plant(sorted_data[0], sorted_data[1], sorted_data[2], sorted_data[3], sorted_data[4],
+                          sorted_data[5], sorted_data[6])
+        ListOfPlants.add_defined_plant(list_of_plants, new_plant)
+        Manager.goto_menu(sm)
