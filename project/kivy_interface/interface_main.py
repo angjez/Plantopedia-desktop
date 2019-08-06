@@ -20,10 +20,10 @@ class Manager(ScreenManager):
         self.add_widget(self.menu_screen)
         self.current = "Menu"
 
-    def push_plant_screens(self, list_of_plants):
+    def push_plant_screens(self, list_of_plants, plant_boxes):
         for n in range(len(list_of_plants.list)):
             from project.kivy_interface.layouts import PlantProperties
-            self.list.append(PlantProperties(list_of_plants.list[n], self, list_of_plants))
+            self.list.append(PlantProperties(list_of_plants.list[n], self, list_of_plants, plant_boxes))
             self.screen.append(Screen(name=list_of_plants.list[n].common_name))
             self.screen[n].add_widget(self.list[n])
             self.add_widget(self.screen[n])
@@ -39,26 +39,31 @@ class Manager(ScreenManager):
         AddPlant.name = "Add plant"
         self.current = "Add plant"
 
-    def add_screen(self, list_of_plants):
+    def add_screen(self, list_of_plants, plant_boxes):
         from project.kivy_interface.layouts import PlantProperties
         new_screen = Screen(name=list_of_plants.list[-1].common_name)
-        new_screen.add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants))
+        new_screen.add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
         self.add_widget(new_screen)
         self.current = list_of_plants.list[-1].common_name
 
-    def delete_plant(self, list_of_plants, obj):
+    def delete_plant(self, list_of_plants, plant_boxes, obj):
         from project.app.plant_list import ListOfPlants
+        from project.kivy_interface.layouts import PlantBoxes
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
         ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
+        # updating the file after changing the list of plants
         clear_file()
         store_data(list_of_plants.list)
         self.goto_menu()
+        index = 0
         for n in range(len(self.screen)):
             if self.screen[n].name == screen_to_delete:
                 screen_to_delete = self.screen[n]
                 self.remove_widget(screen_to_delete)
+                index = n
+        PlantBoxes.remove_button(plant_boxes, index)
 
 
 class AddPlant(Screen):

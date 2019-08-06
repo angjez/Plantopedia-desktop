@@ -32,13 +32,13 @@ class PlantBoxes(BoxLayout):
         self.orientation = "vertical"
         self.button = []
 
-    def initiate_buttons(self, list_of_plants, sm):
+    def initiate_buttons(self, list_of_plants, sm, plant_boxes):
         for n in range(len(list_of_plants.list)):
             self.button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(self.button[n])
 
         # screen manager adds all of the screens for the buttons
-        Manager.push_plant_screens(sm, list_of_plants)
+        Manager.push_plant_screens(sm, list_of_plants, plant_boxes)
 
         # assigning screens to buttons
         for n in range(len(list_of_plants.list)):
@@ -49,6 +49,9 @@ class PlantBoxes(BoxLayout):
         self.add_widget(self.button[-1])
         self.button[-1].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[-1].common_name)
 
+    def remove_button(self, index):
+        self.remove_widget(self.button[index])
+
 
 class MainBoxes(BoxLayout):
 
@@ -56,7 +59,7 @@ class MainBoxes(BoxLayout):
         super(MainBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
         plant_boxes = PlantBoxes()
-        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm)
+        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes)
         menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)
         self.add_widget(plant_boxes)
         self.add_widget(menu_boxes)
@@ -67,7 +70,7 @@ class MainBoxes(BoxLayout):
 
 class PlantProperties(BoxLayout):
 
-    def __init__(self, plant, sm, list_of_plants, **kwargs):
+    def __init__(self, plant, sm, list_of_plants, plant_boxes, **kwargs):
         super(PlantProperties, self).__init__(**kwargs)
 
         self.orientation = "vertical"
@@ -78,14 +81,14 @@ class PlantProperties(BoxLayout):
         soil_label = Label(text=plant.soil)
         repotting_label = Label(text=plant.repotting)
         size_label = Label(text=plant.size)
-        menu_boxes = PlantMenuBoxes(sm, list_of_plants)
+        menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes)
 
         for label in [common_name_label, botanical_name_label, sun_exposure_label, water_label, soil_label, repotting_label, size_label, menu_boxes]:
             self.add_widget(label)
 
 
 class PlantMenuBoxes(BoxLayout):
-    def __init__(self, sm, list_of_plants, **kwargs):
+    def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
         super(PlantMenuBoxes, self).__init__(**kwargs)
 
         from project.app.plant_list import ListOfPlants
@@ -96,7 +99,7 @@ class PlantMenuBoxes(BoxLayout):
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         self.delete_button = Button(text="Delete", size_hint=(.1, .3))
-        self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants)
+        self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes)
 
         self.edit_button = Button(text="Edit", size_hint=(.1, .3))
 
@@ -178,7 +181,7 @@ class Input(BoxLayout):
         sorted_data.clear()
         self.clear_input()
         PlantBoxes.add_button(plant_boxes, list_of_plants, sm)
-        Manager.add_screen(sm, list_of_plants)
+        Manager.add_screen(sm, list_of_plants, plant_boxes)
 
     def clear_input(self):
         for n in range(0, 7):
