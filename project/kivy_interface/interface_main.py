@@ -34,8 +34,8 @@ class Manager(ScreenManager):
     def goto_menu(self):
         self.current = "Menu"
 
-    def add_plant_screen(self, list_of_plants, obj):
-        self.add_widget(AddPlant(self, list_of_plants))
+    def add_plant_screen(self, list_of_plants, plant_boxes, obj):
+        self.add_widget(AddPlant(self, list_of_plants, plant_boxes))
         AddPlant.name = "Add plant"
         self.current = "Add plant"
 
@@ -46,15 +46,12 @@ class Manager(ScreenManager):
         self.add_widget(new_screen)
         self.current = list_of_plants[-1].common_name
 
-    def add_button(self):
-        pass
-
 
 class AddPlant(Screen):
-    def __init__(self, sm, list_of_plants, **kwargs):
+    def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
         super(AddPlant, self).__init__(**kwargs)
         from project.kivy_interface.layouts import NewPlant
-        new_plant_page = NewPlant(list_of_plants, sm)
+        new_plant_page = NewPlant(list_of_plants, sm, plant_boxes)
         self.add_widget(new_plant_page)
 
 

@@ -10,12 +10,12 @@ from project.app.plant_def import Plant
 
 
 class MenuBoxes(BoxLayout):
-    def __init__(self, list_of_plants, sm, **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(MenuBoxes, self).__init__(**kwargs)
         self.orientation = "horizontal"
 
         add_button = Button(text="Add", size_hint=(.1, .1))
-        add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants)
+        add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
 
         delete_button = Button(text="Delete", size_hint=(.1, .1))
 
@@ -27,11 +27,12 @@ class MenuBoxes(BoxLayout):
 
 class PlantBoxes(BoxLayout):
 
-    def __init__(self, list_of_plants, sm, **kwargs):
+    def __init__(self, **kwargs):
         super(PlantBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
         self.button = []
 
+    def initiate_buttons(self, list_of_plants, sm):
         for n in range(len(list_of_plants.list)):
             self.button.append(Button(text=list_of_plants.list[n].common_name))
             self.add_widget(self.button[n])
@@ -43,14 +44,20 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             self.button[n].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[n].common_name)
 
+    def add_button(self, list_of_plants, sm):
+        self.button.append(Button(text=list_of_plants.list[-1].common_name))
+        self.add_widget(self.button[-1])
+        self.button[-1].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[-1].common_name)
+
 
 class MainBoxes(BoxLayout):
 
     def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
-        plant_boxes = PlantBoxes(list_of_plants, sm)
-        menu_boxes = MenuBoxes(list_of_plants, sm)
+        plant_boxes = PlantBoxes()
+        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm)
+        menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)
         self.add_widget(plant_boxes)
         self.add_widget(menu_boxes)
 
@@ -96,16 +103,16 @@ class PlantMenuBoxes(BoxLayout):
             self.add_widget(but)
 
 
-# new plant layout
+    # new plant layout
 
 
 class NewPlant(BoxLayout):
 
-    def __init__(self, list_of_plants, sm,  **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes,  **kwargs):
         super(NewPlant, self).__init__(**kwargs)
         self.orientation = "horizontal"
         self.add_widget(InputLabels())
-        self.add_widget(Input(list_of_plants, sm))
+        self.add_widget(Input(list_of_plants, sm, plant_boxes))
 
 
 class InputLabels(BoxLayout):
@@ -126,7 +133,7 @@ class InputLabels(BoxLayout):
 
 
 class Input(BoxLayout):
-    def __init__(self, list_of_plants, sm, **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(Input, self).__init__(**kwargs)
         self.orientation = "vertical"
 
@@ -137,7 +144,7 @@ class Input(BoxLayout):
         for n in range(0, 7):
             self.input_fields.append(TextInput(multiline=False, hint_text_color=(0, 0, 0, 0.5)))
             self.add_widget(self.input_fields[n])
-            self.input_fields[n].fbind('on_text_validate', self.on_text, list_of_plants=list_of_plants, sm=sm)
+            self.input_fields[n].fbind('on_text_validate', self.on_text, list_of_plants=list_of_plants, sm=sm, plant_boxes=plant_boxes)
 
         self.input_fields[0].hint_text = "common name"
         self.input_fields[1].hint_text = "botanical name"
@@ -147,13 +154,13 @@ class Input(BoxLayout):
         self.input_fields[5].hint_text = "repotting"
         self.input_fields[6].hint_text = "size"
 
-    def on_text(self, value, list_of_plants, sm):
+    def on_text(self, value, list_of_plants, sm, plant_boxes):
         self.collected_input.append(value.text)
         self.order_tracker.append(value.hint_text)
         if len(self.collected_input) == 7:
-            self.interpret_data(list_of_plants, sm)
+            self.interpret_data(list_of_plants, sm, plant_boxes)
 
-    def interpret_data(self, list_of_plants, sm):
+    def interpret_data(self, list_of_plants, sm, plant_boxes):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         sorted_data = [None] * 7
@@ -169,7 +176,7 @@ class Input(BoxLayout):
         store_data(list_of_plants.list)
         sorted_data.clear()
         self.clear_input()
-        Manager.add_button(sm, list_of_plants.list)
+        PlantBoxes.add_button(plant_boxes, list_of_plants, sm)
         Manager.add_screen(sm, list_of_plants.list)
 
     def clear_input(self):
