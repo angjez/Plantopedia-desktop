@@ -12,16 +12,17 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
+        from project.kivy_interface.layouts import MainBoxes
         self.list = []
         self.screen = []
-        menu_screen = MenuScreen(list_of_plants, self)
-        self.add_widget(menu_screen)
-        MenuScreen.name = "Menu"
+        self.menu_screen = Screen(name="Menu")
+        self.menu_screen.add_widget(MainBoxes(list_of_plants, self))
+        self.add_widget(self.menu_screen)
         self.current = "Menu"
 
     def push_plant_screens(self, list_of_plants):
-        from project.kivy_interface.layouts import PlantProperties
         for n in range(len(list_of_plants)):
+            from project.kivy_interface.layouts import PlantProperties
             self.list.append(PlantProperties(list_of_plants[n], self, list_of_plants))
             self.screen.append(Screen(name=list_of_plants[n].common_name))
             self.screen[n].add_widget(self.list[n])
@@ -38,13 +39,15 @@ class Manager(ScreenManager):
         AddPlant.name = "Add plant"
         self.current = "Add plant"
 
+    def add_screen(self, list_of_plants):
+        from project.kivy_interface.layouts import PlantProperties
+        new_screen = Screen(name=list_of_plants[-1].common_name)
+        new_screen.add_widget(PlantProperties(list_of_plants[-1], self, list_of_plants))
+        self.add_widget(new_screen)
+        self.current = list_of_plants[-1].common_name
 
-class MenuScreen(Screen):
-    def __init__(self, list_of_plants, sm, **kwargs):
-        super(MenuScreen, self).__init__(**kwargs)
-        from project.kivy_interface.layouts import MainBoxes
-        menu_page = MainBoxes(list_of_plants, sm)
-        self.add_widget(menu_page)
+    def add_button(self):
+        pass
 
 
 class AddPlant(Screen):
@@ -61,7 +64,6 @@ class MainApp(App):
         from project.app.plant_list import ListOfPlants
 
         self.title = "Plantopedia"
-
         list_of_plants = ListOfPlants()
         load_data(list_of_plants)
 

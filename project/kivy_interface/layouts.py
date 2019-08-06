@@ -43,11 +43,6 @@ class PlantBoxes(BoxLayout):
         for n in range(len(list_of_plants.list)):
             self.button[n].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[n].common_name)
 
-    def new_button(self, list_of_plants, sm):
-        self.button.append(Button(text=list_of_plants.list[-1].common_name))
-        self.button[-1].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[-1].common_name)
-        return self.button[-1]
-
 
 class MainBoxes(BoxLayout):
 
@@ -69,48 +64,35 @@ class PlantProperties(BoxLayout):
         super(PlantProperties, self).__init__(**kwargs)
 
         self.orientation = "vertical"
-
         common_name_label = Label(text=plant.common_name)
-        self.add_widget(common_name_label)
-
         botanical_name_label = Label(text=plant.botanical_name)
-        self.add_widget(botanical_name_label)
-
         sun_exposure_label = Label(text=plant.sun_exposure)
-        self.add_widget(sun_exposure_label)
-
         water_label = Label(text=plant.water)
-        self.add_widget(water_label)
-
         soil_label = Label(text=plant.soil)
-        self.add_widget(soil_label)
-
         repotting_label = Label(text=plant.repotting)
-        self.add_widget(repotting_label)
-
         size_label = Label(text=plant.size)
-        self.add_widget(size_label)
+        menu_boxes = PlantMenuBoxes(sm, list_of_plants)
 
-        menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant)
-        self.add_widget(menu_boxes)
+        for label in [common_name_label, botanical_name_label, sun_exposure_label, water_label, soil_label, repotting_label, size_label, menu_boxes]:
+            self.add_widget(label)
 
 
 class PlantMenuBoxes(BoxLayout):
-    def __init__(self, sm, list_of_plants, plant, **kwargs):
+    def __init__(self, sm, list_of_plants, **kwargs):
         super(PlantMenuBoxes, self).__init__(**kwargs)
 
         from project.app.plant_list import ListOfPlants
 
         self.orientation = "horizontal"
 
-        back_button = Button(text="Back", size_hint=(.1, .3))
-        back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
+        self.back_button = Button(text="Back", size_hint=(.1, .3))
+        self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
-        delete_button = Button(text="Delete", size_hint=(.1, .3))
+        self.delete_button = Button(text="Delete", size_hint=(.1, .3))
 
-        edit_button = Button(text="Edit", size_hint=(.1, .3))
+        self.edit_button = Button(text="Edit", size_hint=(.1, .3))
 
-        for but in [back_button, delete_button, edit_button]:
+        for but in [self.back_button, self.delete_button, self.edit_button]:
             self.add_widget(but)
 
 
@@ -132,25 +114,15 @@ class InputLabels(BoxLayout):
         self.orientation = "vertical"
 
         common_name_label = Label(text="Common name: ")
-        self.add_widget(common_name_label)
-
         botanical_name_label = Label(text="Botanical name: ")
-        self.add_widget(botanical_name_label)
-
         sun_exposure_label = Label(text="Sun exposure: ")
-        self.add_widget(sun_exposure_label)
-
         water_label = Label(text="Water: ")
-        self.add_widget(water_label)
-
         soil_label = Label(text="Soil: ")
-        self.add_widget(soil_label)
-
         repotting_label = Label(text="Repotting: ")
-        self.add_widget(repotting_label)
-
         size_label = Label(text="Size: ")
-        self.add_widget(size_label)
+
+        for label in [common_name_label, botanical_name_label, sun_exposure_label, water_label, soil_label, repotting_label, size_label]:
+            self.add_widget(label)
 
 
 class Input(BoxLayout):
@@ -195,4 +167,13 @@ class Input(BoxLayout):
         # the list was changed, so it's necessary to update the file
         clear_file()
         store_data(list_of_plants.list)
-        Manager.goto_menu(sm)
+        sorted_data.clear()
+        self.clear_input()
+        Manager.add_button(sm, list_of_plants.list)
+        Manager.add_screen(sm, list_of_plants.list)
+
+    def clear_input(self):
+        for n in range(0, 7):
+            self.input_fields[n].text = ""
+        self.collected_input.clear()
+        self.order_tracker.clear()
