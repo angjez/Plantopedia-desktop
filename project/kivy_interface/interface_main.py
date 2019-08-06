@@ -21,10 +21,10 @@ class Manager(ScreenManager):
         self.current = "Menu"
 
     def push_plant_screens(self, list_of_plants):
-        for n in range(len(list_of_plants)):
+        for n in range(len(list_of_plants.list)):
             from project.kivy_interface.layouts import PlantProperties
-            self.list.append(PlantProperties(list_of_plants[n], self, list_of_plants))
-            self.screen.append(Screen(name=list_of_plants[n].common_name))
+            self.list.append(PlantProperties(list_of_plants.list[n], self, list_of_plants))
+            self.screen.append(Screen(name=list_of_plants.list[n].common_name))
             self.screen[n].add_widget(self.list[n])
             self.add_widget(self.screen[n])
 
@@ -41,10 +41,24 @@ class Manager(ScreenManager):
 
     def add_screen(self, list_of_plants):
         from project.kivy_interface.layouts import PlantProperties
-        new_screen = Screen(name=list_of_plants[-1].common_name)
-        new_screen.add_widget(PlantProperties(list_of_plants[-1], self, list_of_plants))
+        new_screen = Screen(name=list_of_plants.list[-1].common_name)
+        new_screen.add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants))
         self.add_widget(new_screen)
-        self.current = list_of_plants[-1].common_name
+        self.current = list_of_plants.list[-1].common_name
+
+    def delete_plant(self, list_of_plants, obj):
+        from project.app.plant_list import ListOfPlants
+        from project.app.pickle_data import store_data
+        from project.app.pickle_data import clear_file
+        screen_to_delete = self.current
+        ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
+        clear_file()
+        store_data(list_of_plants.list)
+        self.goto_menu()
+        for n in range(len(self.screen)):
+            if self.screen[n].name == screen_to_delete:
+                screen_to_delete = self.screen[n]
+                self.remove_widget(screen_to_delete)
 
 
 class AddPlant(Screen):

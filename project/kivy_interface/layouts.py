@@ -38,7 +38,7 @@ class PlantBoxes(BoxLayout):
             self.add_widget(self.button[n])
 
         # screen manager adds all of the screens for the buttons
-        Manager.push_plant_screens(sm, list_of_plants.list)
+        Manager.push_plant_screens(sm, list_of_plants)
 
         # assigning screens to buttons
         for n in range(len(list_of_plants.list)):
@@ -96,6 +96,7 @@ class PlantMenuBoxes(BoxLayout):
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         self.delete_button = Button(text="Delete", size_hint=(.1, .3))
+        self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants)
 
         self.edit_button = Button(text="Edit", size_hint=(.1, .3))
 
@@ -103,7 +104,7 @@ class PlantMenuBoxes(BoxLayout):
             self.add_widget(but)
 
 
-    # new plant layout
+# new plant layout
 
 
 class NewPlant(BoxLayout):
@@ -177,7 +178,7 @@ class Input(BoxLayout):
         sorted_data.clear()
         self.clear_input()
         PlantBoxes.add_button(plant_boxes, list_of_plants, sm)
-        Manager.add_screen(sm, list_of_plants.list)
+        Manager.add_screen(sm, list_of_plants)
 
     def clear_input(self):
         for n in range(0, 7):

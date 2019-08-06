@@ -22,9 +22,10 @@ class ListOfPlants:
         else:
             print("You have no saved plants.")
 
-    def delete_from_list(self, to_delete, obj):
-        for plant in self.list:
-            if plant.common_name == to_delete:
-                self.list.remove(plant)
+    def delete_from_list(self, to_delete):
+        for plant in range(len(self.list)):
+            if self.list[plant].common_name == to_delete:
+                self.list.remove(self.list[plant])
+                break
 
 
