@@ -34,11 +34,6 @@ class Manager(ScreenManager):
     def goto_menu(self):
         self.current = "Menu"
 
-    def add_plant_screen(self, list_of_plants, plant_boxes, obj):
-        self.add_widget(AddPlant(self, list_of_plants, plant_boxes))
-        AddPlant.name = "Add plant"
-        self.current = "Add plant"
-
     def add_screen(self, list_of_plants, plant_boxes):
         from project.kivy_interface.layouts import PlantProperties
         new_screen = Screen(name=list_of_plants.list[-1].common_name)
@@ -65,6 +60,16 @@ class Manager(ScreenManager):
                 index = n
         PlantBoxes.remove_button(plant_boxes, index)
 
+    def delete_multiple_screen(self, list_of_plants, obj):
+        self.add_widget(DeleteMultiple(list_of_plants, self))
+        DeleteMultiple.name = "Delete multiple"
+        self.current = "Delete multiple"
+
+    def add_plant_screen(self, list_of_plants, plant_boxes, obj):
+        self.add_widget(AddPlant(self, list_of_plants, plant_boxes))
+        AddPlant.name = "Add plant"
+        self.current = "Add plant"
+
 
 class AddPlant(Screen):
     def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
@@ -72,6 +77,15 @@ class AddPlant(Screen):
         from project.kivy_interface.layouts import NewPlant
         new_plant_page = NewPlant(list_of_plants, sm, plant_boxes)
         self.add_widget(new_plant_page)
+
+
+class DeleteMultiple(Screen):
+    def __init__(self, list_of_plants, sm, **kwargs):
+        super(DeleteMultiple, self).__init__(**kwargs)
+        from project.kivy_interface.layouts import DeleteMultipleBoxes
+        delete_multiple = DeleteMultipleBoxes(list_of_plants, sm)
+        self.add_widget(delete_multiple)
+
 
 
 class MainApp(App):

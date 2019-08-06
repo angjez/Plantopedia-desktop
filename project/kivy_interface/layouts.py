@@ -7,6 +7,10 @@ from project.kivy_interface.interface_main import Manager
 from kivy.uix.textinput import TextInput
 from project.app.plant_list import ListOfPlants
 from project.app.plant_def import Plant
+from kivy.uix.checkbox import CheckBox
+
+
+# main screen layout
 
 
 class MenuBoxes(BoxLayout):
@@ -18,10 +22,9 @@ class MenuBoxes(BoxLayout):
         add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
 
         delete_button = Button(text="Delete", size_hint=(.1, .1))
+        delete_button.fbind('on_press', Manager.delete_multiple_screen, sm, list_of_plants)
 
-        edit_button = Button(text="Edit", size_hint=(.1, .1))
-
-        for but in [add_button, delete_button, edit_button]:
+        for but in [add_button, delete_button]:
             self.add_widget(but)
 
 
@@ -188,3 +191,55 @@ class Input(BoxLayout):
             self.input_fields[n].text = ""
         self.collected_input.clear()
         self.order_tracker.clear()
+
+
+# checkbox layout for deleting multiple plants
+
+
+class DeleteMultipleCheckboxes(BoxLayout):
+    def __init__(self, list_of_plants, **kwargs):
+        super(DeleteMultipleCheckboxes, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        checkboxes = []
+        for n in range(len(list_of_plants.list)):
+            checkboxes.append(CheckBox())
+            self.add_widget(checkboxes[n])
+
+
+class DeleteMultipleLabels(BoxLayout):
+    def __init__(self, list_of_plants, **kwargs):
+        super(DeleteMultipleLabels, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        labels = []
+        for n in range(len(list_of_plants.list)):
+            labels.append(Label(text=list_of_plants.list[n].common_name))
+            self.add_widget(labels[n])
+
+
+class DeleteMultipleMenu(BoxLayout):
+    def __init__(self, sm, **kwargs):
+        super(DeleteMultipleMenu, self).__init__(**kwargs)
+        self.orientation = "horizontal"
+
+        cancel_button = Button(text="Cancel", size_hint=(.1, .1))
+        cancel_button.bind(on_press=lambda x: Manager.goto_menu(sm))
+        delete_button = Button(text="Delete", size_hint=(.1, .1))
+
+        for but in [cancel_button, delete_button]:
+            self.add_widget(but)
+
+
+class DeleteMultipleCombine(BoxLayout):
+    def __init__(self, list_of_plants, **kwargs):
+        super(DeleteMultipleCombine, self).__init__(**kwargs)
+        self.orientation = "horizontal"
+        self.add_widget(DeleteMultipleCheckboxes(list_of_plants))
+        self.add_widget(DeleteMultipleLabels(list_of_plants))
+
+
+class DeleteMultipleBoxes(BoxLayout):
+    def __init__(self, list_of_plants, sm, **kwargs):
+        super(DeleteMultipleBoxes, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        self.add_widget(DeleteMultipleCombine(list_of_plants))
+        self.add_widget(DeleteMultipleMenu(sm))
