@@ -60,8 +60,19 @@ class Manager(ScreenManager):
                 index = n
         PlantBoxes.remove_button(plant_boxes, index)
 
-    def delete_multiple_screens(self, list_of_plants, obj):
-        self.add_widget(DeleteMultiple(list_of_plants, self))
+    def delete_multiple_plants(self, list_of_plants, plant_boxes, n):
+        from project.app.pickle_data import store_data
+        from project.app.pickle_data import clear_file
+        from project.kivy_interface.layouts import PlantBoxes
+        from project.app.plant_list import ListOfPlants
+        ListOfPlants.delete_from_list(list_of_plants, self.screen[n].name)
+        clear_file()
+        store_data(list_of_plants.list)
+        self.remove_widget(self.screen[n])
+        PlantBoxes.remove_button(plant_boxes, n)
+
+    def delete_multiple_screens(self, list_of_plants, plant_boxes, obj):
+        self.add_widget(DeleteMultiple(list_of_plants, self, plant_boxes))
         DeleteMultiple.name = "Delete multiple"
         self.current = "Delete multiple"
 
@@ -80,12 +91,12 @@ class AddPlant(Screen):
 
 
 class DeleteMultiple(Screen):
-    def __init__(self, list_of_plants, sm, **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(DeleteMultiple, self).__init__(**kwargs)
         from project.kivy_interface.layouts import DeleteMultipleBoxes
         from project.kivy_interface.layouts import DeleteMultipleCheckboxes
         del_multiple_checkboxes = DeleteMultipleCheckboxes(list_of_plants)
-        delete_multiple = DeleteMultipleBoxes(list_of_plants, del_multiple_checkboxes, sm)
+        delete_multiple = DeleteMultipleBoxes(list_of_plants, del_multiple_checkboxes, sm, plant_boxes)
         self.add_widget(delete_multiple)
 
 
