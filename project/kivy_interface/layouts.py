@@ -1,3 +1,4 @@
+
 # main menu layouts
 
 from kivy.uix.boxlayout import BoxLayout
@@ -202,12 +203,10 @@ class DeleteMultipleCheckboxes(BoxLayout):
         self.orientation = "vertical"
         self.checkboxes = []
         self.active = []
-        self.to_delete = []
         for n in range(len(list_of_plants.list)):
             self.checkboxes.append(CheckBox())
             self.add_widget(self.checkboxes[n])
             self.checkboxes[n].bind(active=self.on_checkbox_active)
-            self.to_delete.append(None)
 
     def disable_checkboxes(self, sm):
         for n in range(len(self.checkboxes)):
@@ -229,6 +228,10 @@ class DeleteMultipleCheckboxes(BoxLayout):
                     DeleteMultipleLabels.delete_label(del_multiple_labels, n)
         Manager.goto_menu(sm)
 
+    def add_checkbox(self):
+        self.checkboxes.append(CheckBox())
+        self.add_widget(self.checkboxes[-1])
+        self.checkboxes[-1].bind(active=self.on_checkbox_active)
 
 class DeleteMultipleLabels(BoxLayout):
     def __init__(self, list_of_plants, **kwargs):
@@ -241,6 +244,10 @@ class DeleteMultipleLabels(BoxLayout):
 
     def delete_label(self, n):
         self.remove_widget(self.labels[n])
+
+    def add_label(self, list_of_plants):
+        self.labels.append(Label(text=list_of_plants.list[-1].common_name))
+        self.add_widget(self.labels[-1])
 
 
 class DeleteMultipleMenu(BoxLayout):
