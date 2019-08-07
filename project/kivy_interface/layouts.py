@@ -22,7 +22,7 @@ class MenuBoxes(BoxLayout):
         add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
 
         delete_button = Button(text="Delete", size_hint=(.1, .1))
-        delete_button.fbind('on_press', Manager.delete_multiple_screen, sm, list_of_plants)
+        delete_button.fbind('on_press', Manager.delete_multiple_screens, sm, list_of_plants)
 
         for but in [add_button, delete_button]:
             self.add_widget(but)
@@ -200,10 +200,15 @@ class DeleteMultipleCheckboxes(BoxLayout):
     def __init__(self, list_of_plants, **kwargs):
         super(DeleteMultipleCheckboxes, self).__init__(**kwargs)
         self.orientation = "vertical"
-        checkboxes = []
+        self.checkboxes = []
         for n in range(len(list_of_plants.list)):
-            checkboxes.append(CheckBox())
-            self.add_widget(checkboxes[n])
+            self.checkboxes.append(CheckBox())
+            self.add_widget(self.checkboxes[n])
+
+    def disable_checkboxes(self, sm):
+        for n in range(len(self.checkboxes)):
+            self.checkboxes[n].active = False
+        Manager.goto_menu(sm)
 
 
 class DeleteMultipleLabels(BoxLayout):
@@ -217,12 +222,12 @@ class DeleteMultipleLabels(BoxLayout):
 
 
 class DeleteMultipleMenu(BoxLayout):
-    def __init__(self, sm, **kwargs):
+    def __init__(self, del_multiple_checkboxes, sm, **kwargs):
         super(DeleteMultipleMenu, self).__init__(**kwargs)
         self.orientation = "horizontal"
 
         cancel_button = Button(text="Cancel", size_hint=(.1, .1))
-        cancel_button.bind(on_press=lambda x: Manager.goto_menu(sm))
+        cancel_button.bind(on_press=lambda x: DeleteMultipleCheckboxes.disable_checkboxes(del_multiple_checkboxes, sm))
         delete_button = Button(text="Delete", size_hint=(.1, .1))
 
         for but in [cancel_button, delete_button]:
@@ -230,16 +235,16 @@ class DeleteMultipleMenu(BoxLayout):
 
 
 class DeleteMultipleCombine(BoxLayout):
-    def __init__(self, list_of_plants, **kwargs):
+    def __init__(self, list_of_plants, del_multiple_checkboxes, **kwargs):
         super(DeleteMultipleCombine, self).__init__(**kwargs)
         self.orientation = "horizontal"
-        self.add_widget(DeleteMultipleCheckboxes(list_of_plants))
+        self.add_widget(del_multiple_checkboxes)
         self.add_widget(DeleteMultipleLabels(list_of_plants))
 
 
 class DeleteMultipleBoxes(BoxLayout):
-    def __init__(self, list_of_plants, sm, **kwargs):
+    def __init__(self, list_of_plants, del_multiple_checkboxes, sm, **kwargs):
         super(DeleteMultipleBoxes, self).__init__(**kwargs)
         self.orientation = "vertical"
-        self.add_widget(DeleteMultipleCombine(list_of_plants))
-        self.add_widget(DeleteMultipleMenu(sm))
+        self.add_widget(DeleteMultipleCombine(list_of_plants, del_multiple_checkboxes))
+        self.add_widget(DeleteMultipleMenu(del_multiple_checkboxes, sm))
