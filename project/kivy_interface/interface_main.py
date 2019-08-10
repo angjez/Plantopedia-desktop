@@ -35,9 +35,9 @@ class Manager(ScreenManager):
 
     def add_screen(self, list_of_plants, plant_boxes):
         from project.kivy_interface.plant_properties_screen_layout import PlantProperties
-        new_screen = Screen(name=list_of_plants.list[-1].common_name)
-        new_screen.add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
-        self.add_widget(new_screen)
+        self.screen.append(Screen(name=list_of_plants.list[-1].common_name))
+        self.screen[-1].add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
+        self.add_widget(self.screen[-1])
         self.current = list_of_plants.list[-1].common_name
 
     def delete_plant(self, list_of_plants, plant_boxes, obj):
