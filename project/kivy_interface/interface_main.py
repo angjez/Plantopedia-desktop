@@ -2,7 +2,6 @@ import kivy
 kivy.require('1.11.0')
 
 from kivy.app import App
-from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -12,7 +11,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
-        from project.kivy_interface.layouts import MainBoxes
+        from project.kivy_interface.main_screen_layout import MainBoxes
         self.list = []
         self.screen = []
         self.menu_screen = Screen(name="Menu")
@@ -22,7 +21,7 @@ class Manager(ScreenManager):
 
     def push_plant_screens(self, list_of_plants, plant_boxes):
         for n in range(len(list_of_plants.list)):
-            from project.kivy_interface.layouts import PlantProperties
+            from project.kivy_interface.plant_properties_screen_layout import PlantProperties
             self.list.append(PlantProperties(list_of_plants.list[n], self, list_of_plants, plant_boxes))
             self.screen.append(Screen(name=list_of_plants.list[n].common_name))
             self.screen[n].add_widget(self.list[n])
@@ -35,7 +34,7 @@ class Manager(ScreenManager):
         self.current = "Menu"
 
     def add_screen(self, list_of_plants, plant_boxes):
-        from project.kivy_interface.layouts import PlantProperties
+        from project.kivy_interface.plant_properties_screen_layout import PlantProperties
         new_screen = Screen(name=list_of_plants.list[-1].common_name)
         new_screen.add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
         self.add_widget(new_screen)
@@ -43,7 +42,7 @@ class Manager(ScreenManager):
 
     def delete_plant(self, list_of_plants, plant_boxes, obj):
         from project.app.plant_list import ListOfPlants
-        from project.kivy_interface.layouts import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantBoxes
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
@@ -63,7 +62,7 @@ class Manager(ScreenManager):
     def delete_multiple_plants(self, list_of_plants, plant_boxes, n):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
-        from project.kivy_interface.layouts import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantBoxes
         from project.app.plant_list import ListOfPlants
         ListOfPlants.delete_from_list(list_of_plants, self.screen[n].name)
         clear_file()
@@ -77,24 +76,45 @@ class Manager(ScreenManager):
         self.current = "Delete multiple"
 
     def add_plant_screen(self, list_of_plants, plant_boxes, obj):
+        for n in range(len(self.screens)):
+            if self.screens[n].name == "Add plant":
+                self.current = "Add plant"
+                return 0
         self.add_widget(AddPlant(self, list_of_plants, plant_boxes))
         AddPlant.name = "Add plant"
         self.current = "Add plant"
+
+    def add_edit_screen(self, list_of_plants, plant_boxes, obj):
+        index = 0
+        for n in range(len(list_of_plants.list)):
+            if self.current == list_of_plants.list[n].common_name:
+                index = n
+        self.add_widget(EditPlantScreen(self, list_of_plants, index, plant_boxes))
+        EditPlantScreen.name = "Edit plant"
+        self.current = "Edit plant"
 
 
 class AddPlant(Screen):
     def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
         super(AddPlant, self).__init__(**kwargs)
-        from project.kivy_interface.layouts import NewPlant
+        from project.kivy_interface.add_screen_layout import NewPlant
         new_plant_page = NewPlant(list_of_plants, sm, plant_boxes)
         self.add_widget(new_plant_page)
+
+
+class EditPlantScreen(Screen):
+    def __init__(self, sm, list_of_plants, index, plant_boxes, **kwargs):
+        super(EditPlantScreen, self).__init__(**kwargs)
+        from project.kivy_interface.edit_screen_layout import EditPlant
+        edit_plant_page = EditPlant(list_of_plants, sm, index, plant_boxes)
+        self.add_widget(edit_plant_page)
 
 
 class DeleteMultiple(Screen):
     def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(DeleteMultiple, self).__init__(**kwargs)
-        from project.kivy_interface.layouts import DeleteMultipleBoxes
-        from project.kivy_interface.layouts import DeleteMultipleCheckboxes
+        from project.kivy_interface.delete_multiple_screen_layout import DeleteMultipleBoxes
+        from project.kivy_interface.delete_multiple_screen_layout import DeleteMultipleCheckboxes
         del_multiple_checkboxes = DeleteMultipleCheckboxes(list_of_plants)
         delete_multiple = DeleteMultipleBoxes(list_of_plants, del_multiple_checkboxes, sm, plant_boxes)
         self.add_widget(delete_multiple)
