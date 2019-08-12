@@ -46,7 +46,6 @@ class Manager(ScreenManager):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
-        print(self.current)
         ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
         PlantBoxes.remove_button(plant_boxes, screen_to_delete)
         # updating the file after changing the list of plants
