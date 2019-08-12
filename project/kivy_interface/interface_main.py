@@ -46,18 +46,17 @@ class Manager(ScreenManager):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
+        print(self.current)
         ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
+        PlantBoxes.remove_button(plant_boxes, screen_to_delete)
         # updating the file after changing the list of plants
         clear_file()
         store_data(list_of_plants.list)
         self.goto_menu()
-        index = 0
         for n in range(len(self.screen)):
             if self.screen[n].name == screen_to_delete:
                 screen_to_delete = self.screen[n]
                 self.remove_widget(screen_to_delete)
-                index = n
-        PlantBoxes.remove_button(plant_boxes, index)
 
     def delete_multiple_plants(self, list_of_plants, plant_boxes, n):
         from project.app.pickle_data import store_data

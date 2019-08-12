@@ -42,8 +42,10 @@ class PlantBoxes(BoxLayout):
         self.add_widget(self.button[-1])
         self.button[-1].fbind('on_press', Manager.switch_screens, sm, list_of_plants.list[-1].common_name)
 
-    def remove_button(self, index):
-        self.remove_widget(self.button[index])
+    def remove_button(self, name):
+        for n in range(len(self.button)):
+            if self.button[n].text == name:
+                self.remove_widget(self.button[n])
 
 
 class MainBoxes(BoxLayout):
