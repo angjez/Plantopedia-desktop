@@ -70,6 +70,10 @@ class Manager(ScreenManager):
         PlantBoxes.remove_button(plant_boxes, n)
 
     def delete_multiple_screens(self, list_of_plants, plant_boxes, obj):
+        for n in range(len(self.screens)):
+            if self.screens[n].name == "Delete multiple":
+                self.remove_widget(self.screens[n])
+                break
         self.add_widget(DeleteMultiple(list_of_plants, self, plant_boxes))
         DeleteMultiple.name = "Delete multiple"
         self.current = "Delete multiple"

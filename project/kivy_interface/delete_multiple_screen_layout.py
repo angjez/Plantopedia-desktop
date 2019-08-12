@@ -30,12 +30,14 @@ class DeleteMultipleCheckboxes(BoxLayout):
             self.active.remove(checkbox)
 
     def interpret_data(self, sm, list_of_plants, plant_boxes, del_multiple_labels):
+        from project.kivy_interface.main_screen_layout import PlantBoxes
         for n in range(len(self.checkboxes)):
             for m in range(len(self.active)):
                 if self.checkboxes[n] == self.active[m]:
                     Manager.delete_multiple_plants(sm, list_of_plants, plant_boxes, n)
                     self.remove_widget(self.checkboxes[n])
                     DeleteMultipleLabels.delete_label(del_multiple_labels, n)
+                    PlantBoxes.remove_button(plant_boxes, del_multiple_labels.labels[n].text)
         Manager.goto_menu(sm)
 
 
