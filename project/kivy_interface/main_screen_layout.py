@@ -6,7 +6,7 @@ from project.kivy_interface.interface_main import Manager
 class MenuBoxes(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(MenuBoxes, self).__init__(**kwargs)
-        self.orientation = "horizontal"
+        # self.orientation = "horizontal"
 
         add_button = Button(text="Add", size_hint=(.1, .1))
         add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
@@ -22,7 +22,6 @@ class PlantBoxes(BoxLayout):
 
     def __init__(self, **kwargs):
         super(PlantBoxes, self).__init__(**kwargs)
-        self.orientation = "vertical"
         self.button = []
 
     def initiate_buttons(self, list_of_plants, sm, plant_boxes):
@@ -52,7 +51,6 @@ class MainBoxes(BoxLayout):
 
     def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
-        self.orientation = "vertical"
         plant_boxes = PlantBoxes()
         PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes)
         menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)

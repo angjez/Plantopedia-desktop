@@ -3,7 +3,9 @@ kivy.require('1.11.0')
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
 
+Builder.load_file('main_screen_layout.kv')
 
 # screens
 
