@@ -25,6 +25,7 @@ class PlantBoxes(BoxLayout):
     def __init__(self, **kwargs):
         super(PlantBoxes, self).__init__(**kwargs)
         self.button = []
+        self.spacing = 8
 
     def initiate_buttons(self, list_of_plants, sm, plant_boxes):
         for n in range(len(list_of_plants.list)):
@@ -53,8 +54,10 @@ class MainBoxes(BoxLayout):
 
     def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
+        self.spacing = 8
+        self.padding = [8, 0, 8, 0]
         plant_boxes = PlantBoxes()
-        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes)
         menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)
+        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes)
         self.add_widget(plant_boxes)
         self.add_widget(menu_boxes)

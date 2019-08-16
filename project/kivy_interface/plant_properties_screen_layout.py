@@ -57,7 +57,7 @@ class PlantProperties(BoxLayout):
         self.labels = []
 
         self.labels.append(PropertyLabelEven(text=plant.common_name))
-        self.labels.append(PropertyLabelOdd(text=plant.botanical_name))
+        self.labels.append(PropertyLabelOdd(text="[i]" + plant.botanical_name+ "[/i]", markup = True))
         self.labels.append(PropertyLabelEven(text=plant.sun_exposure))
         self.labels.append(PropertyLabelOdd(text=plant.water))
         self.labels.append(PropertyLabelEven(text=plant.soil))
