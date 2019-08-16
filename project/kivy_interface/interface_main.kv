@@ -1,4 +1,4 @@
-<MenuBoxes>:
+<MenuBoxes, NewPlant, CombineHorizontalBoxes>:
     orientation: "horizontal"
 
     canvas:
@@ -7,16 +7,7 @@
             size:self.size
             source: 'green_background.png'
 
-<PlantBoxes>:
-    orientation: "vertical"
-
-    canvas:
-        Rectangle:
-            pos:self.pos
-            size:self.size
-            source: 'green_background.png'
-
-<MainBoxes>:
+<PlantBoxes, MainBoxes, PlantProperties, CombineAllBoxes>:
     orientation: "vertical"
 
     canvas:

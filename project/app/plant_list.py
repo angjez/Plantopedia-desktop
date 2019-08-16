@@ -12,16 +12,6 @@ class ListOfPlants:
     def add_defined_plant(self, defined_plant):
         self.list.append(defined_plant)
 
-    def print_list(self):
-        if self.list:
-            print("Your plants: ")
-            print("")
-            for plant in range(len(self.list)):
-                self.list[plant].print_variables()
-                print("")
-        else:
-            print("You have no saved plants.")
-
     def delete_from_list(self, to_delete):
         for plant in range(len(self.list)):
             if self.list[plant].common_name == to_delete:

@@ -5,7 +5,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 
-Builder.load_file('main_screen_layout.kv')
+Builder.load_file('interface_main.kv')
 
 # screens
 
@@ -23,8 +23,8 @@ class Manager(ScreenManager):
 
     def push_plant_screens(self, list_of_plants, plant_boxes):
         for n in range(len(list_of_plants.list)):
-            from project.kivy_interface.plant_properties_screen_layout import PlantProperties
-            self.list.append(PlantProperties(list_of_plants.list[n], self, list_of_plants, plant_boxes))
+            from project.kivy_interface.plant_properties_screen_layout import CombineAllBoxes
+            self.list.append(CombineAllBoxes(list_of_plants.list[n], self, list_of_plants, plant_boxes))
             self.screen.append(Screen(name=list_of_plants.list[n].common_name))
             self.screen[n].add_widget(self.list[n])
             self.add_widget(self.screen[n])
@@ -36,9 +36,9 @@ class Manager(ScreenManager):
         self.current = "Menu"
 
     def add_screen(self, list_of_plants, plant_boxes):
-        from project.kivy_interface.plant_properties_screen_layout import PlantProperties
+        from project.kivy_interface.plant_properties_screen_layout import CombineAllBoxes
         self.screen.append(Screen(name=list_of_plants.list[-1].common_name))
-        self.screen[-1].add_widget(PlantProperties(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
+        self.screen[-1].add_widget(CombineAllBoxes(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
         self.add_widget(self.screen[-1])
         self.current = list_of_plants.list[-1].common_name
 

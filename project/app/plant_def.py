@@ -7,15 +7,3 @@ class Plant:
         self.soil = soil
         self.repotting = repotting
         self.size = size
-
-    def print_variables(self):
-        print("Common name: " + str(self.common_name))
-        print("Botanical name: " + str(self.botanical_name))
-        print("Sun exposure: " + str(self.sun_exposure))
-        print("Water: " + str(self.water))
-        print("Soil: " + str(self.soil))
-        print("Repotting: " + str(self.repotting))
-        print("Size: " + str(self.size))
-
-    def get_common_name(self):
-        return self.common_name

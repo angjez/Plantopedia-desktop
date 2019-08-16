@@ -1,3 +1,4 @@
+
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from project.kivy_interface.interface_main import Manager
@@ -6,7 +7,6 @@ from project.kivy_interface.interface_main import Manager
 class MenuBoxes(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(MenuBoxes, self).__init__(**kwargs)
-        # self.orientation = "horizontal"
 
         add_button = Button(text="Add", size_hint=(.1, .1))
         add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)

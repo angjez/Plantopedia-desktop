@@ -10,7 +10,6 @@ class NewPlant(BoxLayout):
 
     def __init__(self, list_of_plants, sm, plant_boxes,  **kwargs):
         super(NewPlant, self).__init__(**kwargs)
-        self.orientation = "horizontal"
         self.add_widget(InputLabels())
         self.add_widget(Input(list_of_plants, sm, plant_boxes))
 
@@ -19,17 +18,24 @@ class InputLabels(BoxLayout):
     def __init__(self, **kwargs):
         super(InputLabels, self).__init__(**kwargs)
         self.orientation = "vertical"
+        self.size_hint = (0.5, 1.0)
+        self.labels = []
 
-        common_name_label = Label(text="Common name: ")
-        botanical_name_label = Label(text="Botanical name: ")
-        sun_exposure_label = Label(text="Sun exposure: ")
-        water_label = Label(text="Water: ")
-        soil_label = Label(text="Soil: ")
-        repotting_label = Label(text="Repotting: ")
-        size_label = Label(text="Size: ")
+        self.labels.append(Label(text="[b]" + "Common name: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Botanical name: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Sun exposure: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Water: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Soil: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Repotting: " + "[/b]", markup=True))
+        self.labels.append(Label(text="[b]" + "Size: " + "[/b]", markup=True))
 
-        for label in [common_name_label, botanical_name_label, sun_exposure_label, water_label, soil_label, repotting_label, size_label]:
-            self.add_widget(label)
+        for label in range(len(self.labels)):
+            self.labels[label].size_hint = (1.0, 1.0)
+            self.labels[label].halign = "left"
+            self.labels[label].valign = "middle"
+            self.labels[label].padding_x = 50
+            self.labels[label].bind(size=self.labels[label].setter("text_size"))
+            self.add_widget(self.labels[label])
 
 
 class Input(BoxLayout):
