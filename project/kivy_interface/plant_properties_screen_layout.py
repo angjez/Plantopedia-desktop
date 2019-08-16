@@ -29,6 +29,24 @@ class PropertyLabelOdd(Label):
         self.bind(size=self.setter("text_size"))
 
 
+class ImageCommonNameBotanicalName(BoxLayout):
+    def __init__(self, plant, **kwargs):
+        super(ImageCommonNameBotanicalName, self).__init__(**kwargs)
+        self.size_hint = (1.0, 0.3)
+        self.orientation = "horizontal"
+        self.add_widget(PropertyLabelEven(text=plant.image))
+
+        labels_box = BoxLayout(orientation='vertical')
+        labels_box.add_widget(PropertyLabelEven(text="[b]" + "Common name: " + "[/b]"))
+        labels_box.add_widget(PropertyLabelOdd(text="[b]" + "Botanical name: " + "[/b]"))
+        self.add_widget(labels_box)
+
+        properties_labels_box = BoxLayout(orientation='vertical')
+        properties_labels_box.add_widget(PropertyLabelEven(text=plant.common_name))
+        properties_labels_box.add_widget(PropertyLabelOdd(text="[i]" + plant.botanical_name + "[/i]", markup = True))
+        self.add_widget(properties_labels_box)
+
+
 class FeatureLabels(BoxLayout):
     def __init__(self, **kwargs):
         super(FeatureLabels, self).__init__(**kwargs)
@@ -36,8 +54,6 @@ class FeatureLabels(BoxLayout):
         self.size_hint = (0.5, 1.0)
         self.labels = []
 
-        self.labels.append(PropertyLabelEven(text="[b]" + "Common name: " + "[/b]"))
-        self.labels.append(PropertyLabelOdd(text="[b]" + "Botanical name: " + "[/b]"))
         self.labels.append(PropertyLabelEven(text="[b]" + "Sun exposure: " + "[/b]"))
         self.labels.append(PropertyLabelOdd(text="[b]" + "Water: " + "[/b]"))
         self.labels.append(PropertyLabelEven(text="[b]" + "Soil: " + "[/b]"))
@@ -56,8 +72,6 @@ class PlantProperties(BoxLayout):
         self.orientation = "vertical"
         self.labels = []
 
-        self.labels.append(PropertyLabelEven(text=plant.common_name))
-        self.labels.append(PropertyLabelOdd(text="[i]" + plant.botanical_name+ "[/i]", markup = True))
         self.labels.append(PropertyLabelEven(text=plant.sun_exposure))
         self.labels.append(PropertyLabelOdd(text=plant.water))
         self.labels.append(PropertyLabelEven(text=plant.soil))
@@ -99,5 +113,6 @@ class CombineAllBoxes(BoxLayout):
     def __init__(self, plant, sm, list_of_plants, plant_boxes, **kwargs):
         super(CombineAllBoxes, self).__init__(**kwargs)
         menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes)
+        self.add_widget(ImageCommonNameBotanicalName(plant))
         self.add_widget(CombineHorizontalBoxes(plant))
         self.add_widget(menu_boxes)
