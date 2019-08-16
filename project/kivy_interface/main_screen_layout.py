@@ -8,13 +8,15 @@ class MenuBoxes(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
         super(MenuBoxes, self).__init__(**kwargs)
 
-        add_button = Button(text="Add", size_hint=(.1, .1))
-        add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
+        self.size_hint = (1.0, 0.05)
 
-        delete_button = Button(text="Delete", size_hint=(.1, .1))
-        delete_button.fbind('on_press', Manager.delete_multiple_screens, sm, list_of_plants, plant_boxes)
+        self.add_button = Button(text="Add")
+        self.add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
 
-        for but in [add_button, delete_button]:
+        self.delete_button = Button(text="Delete")
+        self.delete_button.fbind('on_press', Manager.delete_multiple_screens, sm, list_of_plants, plant_boxes)
+
+        for but in [self.add_button, self.delete_button]:
             self.add_widget(but)
 
 

@@ -5,10 +5,6 @@ class ListOfPlants:
     def __init__(self):
         self.list = []
 
-    def add_new_plant(self):
-        new_plant = Plant(input("Common name: "), input("Botanical name: "), input("Sun exposure: "), input("Water: "), input("Soil: "), input("Repotting: "), input("Size: "))
-        self.list.append(new_plant)
-
     def add_defined_plant(self, defined_plant):
         self.list.append(defined_plant)
 

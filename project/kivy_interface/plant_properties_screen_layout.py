@@ -73,14 +73,15 @@ class PlantMenuBoxes(BoxLayout):
         super(PlantMenuBoxes, self).__init__(**kwargs)
 
         self.orientation = "horizontal"
+        self.size_hint = (1.0, 0.05)
 
-        self.back_button = Button(text="Back", size_hint=(.1, .1))
+        self.back_button = Button(text="Back")
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
-        self.delete_button = Button(text="Delete", size_hint=(.1, .1))
+        self.delete_button = Button(text="Delete")
         self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes)
 
-        self.edit_button = Button(text="Edit", size_hint=(.1, .1))
+        self.edit_button = Button(text="Edit")
         self.edit_button.fbind('on_press', Manager.add_edit_screen, sm, list_of_plants, plant_boxes)
 
         for but in [self.back_button, self.delete_button, self.edit_button]:
@@ -90,7 +91,6 @@ class PlantMenuBoxes(BoxLayout):
 class CombineHorizontalBoxes(BoxLayout):
     def __init__(self, plant, **kwargs):
         super(CombineHorizontalBoxes, self).__init__(**kwargs)
-
         self.add_widget(FeatureLabels())
         self.add_widget(PlantProperties(plant))
 

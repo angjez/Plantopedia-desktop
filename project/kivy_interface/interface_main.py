@@ -101,8 +101,8 @@ class Manager(ScreenManager):
 class AddPlant(Screen):
     def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
         super(AddPlant, self).__init__(**kwargs)
-        from project.kivy_interface.add_screen_layout import NewPlant
-        new_plant_page = NewPlant(list_of_plants, sm, plant_boxes)
+        from project.kivy_interface.add_screen_layout import AddPlantCombined
+        new_plant_page = AddPlantCombined(list_of_plants, sm, plant_boxes)
         self.add_widget(new_plant_page)
 
 
