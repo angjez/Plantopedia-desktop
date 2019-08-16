@@ -2,6 +2,50 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from project.kivy_interface.interface_main import Manager
+from kivy.graphics import Color, Rectangle
+
+
+class PropertyLabelEven(Label):
+    def on_size(self, *args):
+        self.size_hint = (1.0, 1.0)
+        self.halign = "left"
+        self.valign = "middle"
+        self.padding_x = 50
+        self.bind(size=self.setter("text_size"))
+        self.markup = True
+
+
+class PropertyLabelOdd(Label):
+    def on_size(self, *args):
+        self.canvas.before.clear()
+        with self.canvas.before:
+            Color(0, 0, 0, 0.5)
+            Rectangle(pos=self.pos, size=self.size)
+        self.size_hint = (1.0, 1.0)
+        self.halign = "left"
+        self.valign = "middle"
+        self.padding_x = 50
+        self.markup = True
+        self.bind(size=self.setter("text_size"))
+
+
+class FeatureLabels(BoxLayout):
+    def __init__(self, **kwargs):
+        super(FeatureLabels, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        self.size_hint = (0.5, 1.0)
+        self.labels = []
+
+        self.labels.append(PropertyLabelEven(text="[b]" + "Common name: " + "[/b]"))
+        self.labels.append(PropertyLabelOdd(text="[b]" + "Botanical name: " + "[/b]"))
+        self.labels.append(PropertyLabelEven(text="[b]" + "Sun exposure: " + "[/b]"))
+        self.labels.append(PropertyLabelOdd(text="[b]" + "Water: " + "[/b]"))
+        self.labels.append(PropertyLabelEven(text="[b]" + "Soil: " + "[/b]"))
+        self.labels.append(PropertyLabelOdd(text="[b]" + "Repotting: " + "[/b]"))
+        self.labels.append(PropertyLabelEven(text="[b]" + "Size: " + "[/b]"))
+
+        for label in range(len(self.labels)):
+            self.add_widget(self.labels[label])
 
 
 class PlantProperties(BoxLayout):
@@ -9,18 +53,18 @@ class PlantProperties(BoxLayout):
     def __init__(self, plant, **kwargs):
         super(PlantProperties, self).__init__(**kwargs)
 
+        self.orientation = "vertical"
         self.labels = []
 
-        self.labels.append(Label(text=plant.common_name, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.botanical_name, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.sun_exposure, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.water, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.soil, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.repotting, size_hint=(1.0, 1.0), halign="left", valign="middle"))
-        self.labels.append(Label(text=plant.size, size_hint=(1.0, 1.0), halign="left", valign="middle"))
+        self.labels.append(PropertyLabelEven(text=plant.common_name))
+        self.labels.append(PropertyLabelOdd(text=plant.botanical_name))
+        self.labels.append(PropertyLabelEven(text=plant.sun_exposure))
+        self.labels.append(PropertyLabelOdd(text=plant.water))
+        self.labels.append(PropertyLabelEven(text=plant.soil))
+        self.labels.append(PropertyLabelOdd(text=plant.repotting))
+        self.labels.append(PropertyLabelEven(text=plant.size))
 
         for label in range(len(self.labels)):
-            self.labels[label].bind(size=self.labels[label].setter("text_size"))
             self.add_widget(self.labels[label])
 
 
@@ -46,9 +90,8 @@ class PlantMenuBoxes(BoxLayout):
 class CombineHorizontalBoxes(BoxLayout):
     def __init__(self, plant, **kwargs):
         super(CombineHorizontalBoxes, self).__init__(**kwargs)
-        from project.kivy_interface.add_screen_layout import InputLabels
 
-        self.add_widget(InputLabels())
+        self.add_widget(FeatureLabels())
         self.add_widget(PlantProperties(plant))
 
 

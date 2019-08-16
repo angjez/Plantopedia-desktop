@@ -6,6 +6,16 @@ from project.app.plant_list import ListOfPlants
 from project.app.plant_def import Plant
 
 
+class InputLabel(Label):
+    def on_size(self, *args):
+        self.size_hint = (1.0, 1.0)
+        self.halign = "left"
+        self.valign = "middle"
+        self.padding_x = 50
+        self.bind(size=self.setter("text_size"))
+        self.markup=True
+
+
 class NewPlant(BoxLayout):
 
     def __init__(self, list_of_plants, sm, plant_boxes,  **kwargs):
@@ -21,20 +31,15 @@ class InputLabels(BoxLayout):
         self.size_hint = (0.5, 1.0)
         self.labels = []
 
-        self.labels.append(Label(text="[b]" + "Common name: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Botanical name: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Sun exposure: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Water: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Soil: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Repotting: " + "[/b]", markup=True))
-        self.labels.append(Label(text="[b]" + "Size: " + "[/b]", markup=True))
+        self.labels.append(InputLabel(text="[b]" + "Common name: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Botanical name: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Sun exposure: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Water: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Soil: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Repotting: " + "[/b]"))
+        self.labels.append(InputLabel(text="[b]" + "Size: " + "[/b]"))
 
         for label in range(len(self.labels)):
-            self.labels[label].size_hint = (1.0, 1.0)
-            self.labels[label].halign = "left"
-            self.labels[label].valign = "middle"
-            self.labels[label].padding_x = 50
-            self.labels[label].bind(size=self.labels[label].setter("text_size"))
             self.add_widget(self.labels[label])
 
 
