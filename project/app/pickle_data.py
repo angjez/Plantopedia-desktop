@@ -14,6 +14,7 @@ def store_data(list_of_plants):
         pickle.dump(store_object.soil, outfile)
         pickle.dump(store_object.repotting, outfile)
         pickle.dump(store_object.size, outfile)
+        pickle.dump(store_object.image, outfile)
     outfile.close()
 
 
@@ -31,7 +32,8 @@ def load_data(list_of_plants):
                 soil = pickle.load(infile)
                 repotting = pickle.load(infile)
                 size = pickle.load(infile)
-                plant = Plant(common_name, botanical_name, sun_exposure, water, soil, repotting, size)
+                image = "XD"
+                plant = Plant(common_name, botanical_name, sun_exposure, water, soil, repotting, size, image)
                 list_of_plants.add_defined_plant(plant)
             except EOFError:
                 break

@@ -109,8 +109,8 @@ class AddPlant(Screen):
 class EditPlantScreen(Screen):
     def __init__(self, sm, list_of_plants, index, plant_boxes, **kwargs):
         super(EditPlantScreen, self).__init__(**kwargs)
-        from project.kivy_interface.edit_screen_layout import EditPlant
-        edit_plant_page = EditPlant(list_of_plants, sm, index, plant_boxes)
+        from project.kivy_interface.edit_screen_layout import EditPlantCombined
+        edit_plant_page = EditPlantCombined(list_of_plants, sm, index, plant_boxes)
         self.add_widget(edit_plant_page)
 
 
