@@ -10,6 +10,7 @@ from kivy.uix.button import Button
 class InputLabel(Label):
     def on_size(self, *args):
         self.size_hint = (1.0, 1.0)
+        self.color = (0, 0, 0, 0.65)
         self.halign = "left"
         self.valign = "middle"
         self.padding_x = 50
@@ -22,6 +23,7 @@ class InputLabels(BoxLayout):
         super(InputLabels, self).__init__(**kwargs)
         self.orientation = "vertical"
         self.size_hint = (0.5, 1.0)
+        self.spacing = 8
         self.labels = []
 
         self.labels.append(InputLabel(text="[b]" + "Common name: " + "[/b]"))
@@ -41,11 +43,12 @@ class Input(BoxLayout):
     def __init__(self, **kwargs):
         super(Input, self).__init__(**kwargs)
         self.orientation = "vertical"
+        self.spacing = 8
 
         self.input_fields = []
 
         for n in range(0, 8):
-            self.input_fields.append(TextInput(multiline=True, hint_text_color=(0, 0, 0, 0.5)))
+            self.input_fields.append(TextInput(multiline=True, hint_text_color=(0, 0, 0, 0.5), background_color=(256, 256, 256, 1)))
             self.add_widget(self.input_fields[n])
 
         self.input_fields[0].hint_text = "common name"
@@ -98,6 +101,7 @@ class AddPlantHorizontal(BoxLayout):
 
     def __init__(self, plant_input,  **kwargs):
         super(AddPlantHorizontal, self).__init__(**kwargs)
+        self.spacing = 8
         self.add_widget(InputLabels())
         self.add_widget(plant_input)
 
@@ -106,6 +110,8 @@ class AddPlantCombined(BoxLayout):
 
     def __init__(self, list_of_plants, sm, plant_boxes,  **kwargs):
         super(AddPlantCombined, self).__init__(**kwargs)
+        self.spacing = 8
+        self.padding = [8, 8, 8, 8]
         plant_input = Input()
         self.add_widget(AddPlantHorizontal(plant_input))
         self.add_widget(AddPlantMenuBoxes(list_of_plants, sm, plant_boxes, plant_input))

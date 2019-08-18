@@ -5,6 +5,7 @@ from project.app.plant_list import ListOfPlants
 from project.app.plant_def import Plant
 from project.kivy_interface.add_screen_layout import InputLabels
 from project.kivy_interface.main_screen_layout import PlantBoxes
+from project.kivy_interface.main_screen_layout import PlantImages
 from kivy.uix.button import Button
 
 
@@ -61,16 +62,16 @@ class EditInput(BoxLayout):
                 sm.remove_widget(sm.screen[n])
         PlantBoxes.remove_button(plant_boxes, list_of_plants.list[index].common_name)
         ListOfPlants.delete_from_list(list_of_plants, list_of_plants.list[index].common_name)
-        self.interpret_data(list_of_plants, sm, plant_boxes, index)
+        self.interpret_data(list_of_plants, sm, plant_boxes)
 
-    def interpret_data(self, list_of_plants, sm, plant_boxes, index):
+    def interpret_data(self, list_of_plants, sm, plant_boxes):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         from project.kivy_interface.main_screen_layout import PlantBoxes
 
-        edited_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
+        new_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
                           self.input_fields[5].text, self.input_fields[6].text, self.input_fields[7].text)
-        list_of_plants.list[index] = edited_plant
+        ListOfPlants.add_defined_plant(list_of_plants, new_plant)
         # the list was changed, so it's necessary to update the file
         clear_file()
         store_data(list_of_plants.list)

@@ -13,9 +13,12 @@ Builder.load_file('interface_main.kv')
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         super(Manager, self).__init__(**kwargs)
-        from project.kivy_interface.main_screen_layout import MainBoxes
         self.list = []
         self.screen = []
+        self.initiate_menu_screen(list_of_plants)
+
+    def initiate_menu_screen(self, list_of_plants):
+        from project.kivy_interface.main_screen_layout import MainBoxes
         self.menu_screen = Screen(name="Menu")
         self.menu_screen.add_widget(MainBoxes(list_of_plants, self))
         self.add_widget(self.menu_screen)
@@ -54,6 +57,9 @@ class Manager(ScreenManager):
         clear_file()
         store_data(list_of_plants.list)
         self.goto_menu()
+        self.delete_screen(screen_to_delete)
+
+    def delete_screen(self, screen_to_delete):
         for n in range(len(self.screen)):
             if self.screen[n].name == screen_to_delete:
                 screen_to_delete = self.screen[n]

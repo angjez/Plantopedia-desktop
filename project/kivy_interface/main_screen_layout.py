@@ -12,6 +12,7 @@ class PlantButton(Button):
         self.padding_x = 100
         self.bind(size=self.setter("text_size"))
         self.markup = True
+        self.font_size = self.height / 3
 
 
 class MenuBoxes(BoxLayout):
@@ -37,9 +38,18 @@ class PlantImages(BoxLayout):
         self.size_hint = (0.3, 1.0)
         self.spacing = 8
 
+        self.images = []
+
         for n in range(len(list_of_plants.list)):
-            img = AsyncImage(source=list_of_plants.list[n].image, allow_stretch=True, keep_ratio=False)
-            self.add_widget(img)
+            self.images.append(AsyncImage(source=list_of_plants.list[n].image, allow_stretch=True, keep_ratio=False))
+            self.add_widget(self.images[n])
+
+    def remove_image(self, index):
+        self.remove_widget(self.images[index])
+
+    def add_image(self, list_of_plants):
+        self.images.append(AsyncImage(source=list_of_plants.list[-1].image, allow_stretch=True, keep_ratio=False))
+        self.add_widget(self.images[-1])
 
 
 class PlantBoxes(BoxLayout):

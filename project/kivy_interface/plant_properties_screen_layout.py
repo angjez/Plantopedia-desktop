@@ -9,6 +9,7 @@ from kivy.uix.image import AsyncImage
 class PropertyLabelEven(Label):
     def on_size(self, *args):
         self.size_hint = (1.0, 1.0)
+        self.color = (0, 0, 0, 0.65)
         self.halign = "left"
         self.valign = "middle"
         self.padding_x = 50
@@ -18,11 +19,8 @@ class PropertyLabelEven(Label):
 
 class PropertyLabelOdd(Label):
     def on_size(self, *args):
-        self.canvas.before.clear()
-        with self.canvas.before:
-            Color(0, 0, 0, 0.5)
-            Rectangle(pos=self.pos, size=self.size)
         self.size_hint = (1.0, 1.0)
+        self.color = (0, 0, 0, 0.65)
         self.halign = "left"
         self.valign = "middle"
         self.padding_x = 50
@@ -107,6 +105,7 @@ class PlantMenuBoxes(BoxLayout):
 class CombineHorizontalBoxes(BoxLayout):
     def __init__(self, plant, **kwargs):
         super(CombineHorizontalBoxes, self).__init__(**kwargs)
+        orientation: "horizontal"
         self.add_widget(FeatureLabels())
         self.add_widget(PlantProperties(plant))
 
@@ -114,6 +113,7 @@ class CombineHorizontalBoxes(BoxLayout):
 class CombineAllBoxes(BoxLayout):
     def __init__(self, plant, sm, list_of_plants, plant_boxes, **kwargs):
         super(CombineAllBoxes, self).__init__(**kwargs)
+        self.padding = [8, 8, 8, 8]
         menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes)
         self.add_widget(ImageCommonNameBotanicalName(plant))
         self.add_widget(CombineHorizontalBoxes(plant))
