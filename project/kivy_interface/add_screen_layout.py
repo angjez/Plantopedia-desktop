@@ -73,7 +73,7 @@ class Input(BoxLayout):
         Manager.add_screen(sm, list_of_plants, plant_boxes)
 
     def clear_input(self):
-        for n in range(0, 7):
+        for n in range(0, 8):
             self.input_fields[n].text = ""
 
 

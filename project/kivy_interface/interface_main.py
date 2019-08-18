@@ -89,11 +89,15 @@ class Manager(ScreenManager):
         self.current = "Add plant"
 
     def add_edit_screen(self, list_of_plants, plant_boxes, obj):
-        index = 0
+        list_index = 0
         for n in range(len(list_of_plants.list)):
             if self.current == list_of_plants.list[n].common_name:
-                index = n
-        self.add_widget(EditPlantScreen(self, list_of_plants, index, plant_boxes))
+                list_index = n
+        for n in range(len(self.screens)):
+            if self.screens[n].name == "Edit plant":
+                self.remove_widget(self.screens[n])
+                break
+        self.add_widget(EditPlantScreen(self, list_of_plants, list_index, plant_boxes))
         EditPlantScreen.name = "Edit plant"
         self.current = "Edit plant"
 
@@ -127,11 +131,15 @@ class DeleteMultiple(Screen):
 class MainApp(App):
     def build(self):
         from project.app.pickle_data import load_data
+        from project.app.pickle_data import clear_file
+        from project.app.pickle_data import store_data
         from project.app.plant_list import ListOfPlants
 
         self.title = "Plantopedia"
         list_of_plants = ListOfPlants()
         load_data(list_of_plants)
+        clear_file()
+        store_data(list_of_plants.list)
 
         return Manager(list_of_plants)
 

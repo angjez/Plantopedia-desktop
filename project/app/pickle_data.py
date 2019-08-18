@@ -32,7 +32,7 @@ def load_data(list_of_plants):
                 soil = pickle.load(infile)
                 repotting = pickle.load(infile)
                 size = pickle.load(infile)
-                image = "XD"
+                image = pickle.load(infile)
                 plant = Plant(common_name, botanical_name, sun_exposure, water, soil, repotting, size, image)
                 list_of_plants.add_defined_plant(plant)
             except EOFError:

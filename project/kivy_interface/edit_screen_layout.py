@@ -14,7 +14,7 @@ class EditPlantCombined(BoxLayout):
         super(EditPlantCombined, self).__init__(**kwargs)
         edit_input = EditInput(list_of_plants, index)
         self.add_widget(EditPlantHorizontal(edit_input))
-        self.add_widget(EditPlantMenuBoxes(list_of_plants, sm, index, plant_boxes))
+        self.add_widget(EditPlantMenuBoxes(list_of_plants, sm, index, plant_boxes, edit_input))
 
 
 class EditPlantHorizontal(BoxLayout):
@@ -56,19 +56,21 @@ class EditInput(BoxLayout):
         self.input_fields[7].hint_text = "image"
 
     def edited(self, list_of_plants, sm, index, plant_boxes, obj):
-        sm.remove_widget(sm.screen[index])
-        PlantBoxes.remove_button(plant_boxes, index)
+        for n in range(len(sm.screen)):
+            if sm.screen[n].name == list_of_plants.list[index].common_name:
+                sm.remove_widget(sm.screen[n])
+        PlantBoxes.remove_button(plant_boxes, list_of_plants.list[index].common_name)
         ListOfPlants.delete_from_list(list_of_plants, list_of_plants.list[index].common_name)
-        self.interpret_data(list_of_plants, sm, plant_boxes)
+        self.interpret_data(list_of_plants, sm, plant_boxes, index)
 
-    def interpret_data(self, list_of_plants, sm, plant_boxes):
+    def interpret_data(self, list_of_plants, sm, plant_boxes, index):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         from project.kivy_interface.main_screen_layout import PlantBoxes
 
-        new_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
+        edited_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
                           self.input_fields[5].text, self.input_fields[6].text, self.input_fields[7].text)
-        ListOfPlants.add_defined_plant(list_of_plants, new_plant)
+        list_of_plants.list[index] = edited_plant
         # the list was changed, so it's necessary to update the file
         clear_file()
         store_data(list_of_plants.list)
@@ -77,12 +79,12 @@ class EditInput(BoxLayout):
         Manager.add_screen(sm, list_of_plants, plant_boxes)
 
     def clear_input(self):
-        for n in range(0, 7):
+        for n in range(0, 8):
             self.input_fields[n].text = ""
 
 
 class EditPlantMenuBoxes(BoxLayout):
-    def __init__(self, list_of_plants, sm, index, plant_boxes, **kwargs):
+    def __init__(self, list_of_plants, sm, index, plant_boxes, edit_input, **kwargs):
         super(EditPlantMenuBoxes, self).__init__(**kwargs)
 
         self.size_hint = (1.0, 0.05)
@@ -92,7 +94,7 @@ class EditPlantMenuBoxes(BoxLayout):
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         self.confirm_button = Button(text="Confirm")
-        self.confirm_button.fbind('on_press', EditInput.edited, list_of_plants, sm, index, plant_boxes)
+        self.confirm_button.fbind('on_press', EditInput.edited, edit_input, list_of_plants, sm, index, plant_boxes)
 
         for but in [self.back_button, self.confirm_button]:
             self.add_widget(but)
