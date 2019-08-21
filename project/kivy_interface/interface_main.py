@@ -7,8 +7,6 @@ from kivy.lang import Builder
 
 Builder.load_file('interface_main.kv')
 
-# screens
-
 
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
@@ -44,13 +42,13 @@ class Manager(ScreenManager):
 
     def delete_plant(self, list_of_plants, plant_boxes, plant_images, obj):
         from project.app.plant_list import ListOfPlants
-        from project.kivy_interface.main_screen_layout import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantButtons
         from project.kivy_interface.main_screen_layout import PlantImages
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
         ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
-        PlantBoxes.remove_button(plant_boxes, screen_to_delete)
+        PlantButtons.remove_button(plant_boxes, screen_to_delete)
         PlantImages.remove_image(plant_images, screen_to_delete)
         # updating the file after changing the list of plants
         clear_file()
@@ -67,13 +65,13 @@ class Manager(ScreenManager):
     def delete_multiple_plants(self, list_of_plants, plant_boxes, n):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
-        from project.kivy_interface.main_screen_layout import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantButtons
         from project.app.plant_list import ListOfPlants
         ListOfPlants.delete_from_list(list_of_plants, self.screen[n].name)
         clear_file()
         store_data(list_of_plants.list)
         self.remove_widget(self.screen[n])
-        PlantBoxes.remove_button(plant_boxes, n)
+        PlantButtons.remove_button(plant_boxes, n)
 
     def delete_multiple_screens(self, list_of_plants, plant_boxes, obj):
         for n in range(len(self.screens)):
@@ -110,8 +108,8 @@ class Manager(ScreenManager):
 class AddPlantScreen(Screen):
     def __init__(self, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
         super(AddPlantScreen, self).__init__(**kwargs)
-        from project.kivy_interface.add_screen_layout import AddPlantCombined
-        new_plant_page = AddPlantCombined(list_of_plants, sm, plant_boxes, plant_images)
+        from project.kivy_interface.add_screen_layout import AddPlantCombinedLayout
+        new_plant_page = AddPlantCombinedLayout(list_of_plants, sm, plant_boxes, plant_images)
         self.add_widget(new_plant_page)
 
 

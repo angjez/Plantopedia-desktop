@@ -71,20 +71,19 @@ class PlantProperties(BoxLayout):
             self.add_widget(self.labels[label])
 
 
-class PlantMenuBoxes(BoxLayout):
+class Menu(BoxLayout):
     def __init__(self, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
-        super(PlantMenuBoxes, self).__init__(**kwargs)
+        super(Menu, self).__init__(**kwargs)
 
-        self.orientation = "horizontal"
         self.size_hint = (1.0, 0.07)
 
-        self.back_button = Button(text="Back")
+        self.back_button = Button(text="Back", background_normal = "menu_button.png")
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
-        self.delete_button = Button(text="Delete")
+        self.delete_button = Button(text="Delete", background_normal = "menu_button.png")
         self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes, plant_images)
 
-        self.edit_button = Button(text="Edit")
+        self.edit_button = Button(text="Edit", background_normal = "menu_button.png")
         self.edit_button.fbind('on_press', Manager.add_edit_screen, sm, list_of_plants, plant_boxes, plant_images)
 
         for but in [self.back_button, self.delete_button, self.edit_button]:
@@ -102,8 +101,7 @@ class CombineHorizontalBoxes(BoxLayout):
 class CombineAllBoxes(BoxLayout):
     def __init__(self, plant, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
         super(CombineAllBoxes, self).__init__(**kwargs)
-        self.padding = [8, 8, 8, 8]
-        menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes, plant_images)
+        menu_boxes = Menu(sm, list_of_plants, plant_boxes, plant_images)
         self.add_widget(ImageCommonNameBotanicalName(plant))
         self.add_widget(CombineHorizontalBoxes(plant))
         self.add_widget(menu_boxes)

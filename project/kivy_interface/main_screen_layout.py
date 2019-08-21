@@ -13,18 +13,17 @@ class PlantButton(Button):
         self.bind(size=self.setter("text_size"))
         self.markup = True
         self.font_size = self.height / 3
+        self.background_normal = "button.png"
 
 
-class MenuBoxes(BoxLayout):
+class Menu(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, plant_images, **kwargs):
-        super(MenuBoxes, self).__init__(**kwargs)
+        super(Menu, self).__init__(**kwargs)
 
-        self.size_hint = (1.0, 0.05)
-
-        self.add_button = Button(text="Add")
+        self.add_button = Button(text="Add", background_normal = "menu_button.png")
         self.add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes, plant_images)
 
-        self.delete_button = Button(text="Delete")
+        self.delete_button = Button(text="Delete", background_normal = "menu_button.png")
         self.delete_button.fbind('on_press', Manager.delete_multiple_screens, sm, list_of_plants, plant_boxes)
 
         for but in [self.add_button, self.delete_button]:
@@ -34,9 +33,7 @@ class MenuBoxes(BoxLayout):
 class PlantImages(BoxLayout):
     def __init__(self, list_of_plants, **kwargs):
         super(PlantImages, self).__init__(**kwargs)
-        self.orientation = "vertical"
         self.size_hint = (0.3, 1.0)
-        self.spacing = 8
 
         self.images = []
         self.captions = []
@@ -57,12 +54,10 @@ class PlantImages(BoxLayout):
         self.captions.append(list_of_plants.list[-1].common_name)
 
 
-class PlantBoxes(BoxLayout):
-
+class PlantButtons(BoxLayout):
     def __init__(self, **kwargs):
-        super(PlantBoxes, self).__init__(**kwargs)
+        super(PlantButtons, self).__init__(**kwargs)
         self.button = []
-        self.spacing = 8
 
     def initiate_buttons(self, list_of_plants, sm, plant_boxes, plant_images):
         for n in range(len(list_of_plants.list)):
@@ -88,15 +83,14 @@ class PlantBoxes(BoxLayout):
 
 
 class MainBoxes(BoxLayout):
-
     def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
         self.spacing = 8
         self.padding = [8, 8, 8, 8]
-        plant_boxes = PlantBoxes()
+        plant_boxes = PlantButtons()
         plant_images = PlantImages(list_of_plants)
-        menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes, plant_images)
-        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes, plant_images)
+        menu_boxes = Menu(list_of_plants, sm, plant_boxes, plant_images)
+        PlantButtons.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes, plant_images)
         plant_boxes_and_images = BoxLayout(orientation='horizontal', padding=[8, 0, 8, 0], spacing=8)
         plant_boxes_and_images.add_widget(plant_boxes)
         plant_boxes_and_images.add_widget(plant_images)

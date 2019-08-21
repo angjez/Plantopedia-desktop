@@ -21,9 +21,7 @@ class InputLabel(Label):
 class InputLabels(BoxLayout):
     def __init__(self, **kwargs):
         super(InputLabels, self).__init__(**kwargs)
-        self.orientation = "vertical"
         self.size_hint = (0.5, 1.0)
-        self.spacing = 8
         self.labels = []
 
         self.labels.append(InputLabel(text="[b]" + "Common name: " + "[/b]"))
@@ -39,11 +37,9 @@ class InputLabels(BoxLayout):
             self.add_widget(self.labels[label])
 
 
-class Input(BoxLayout):
+class InputFields(BoxLayout):
     def __init__(self, **kwargs):
-        super(Input, self).__init__(**kwargs)
-        self.orientation = "vertical"
-        self.spacing = 8
+        super(InputFields, self).__init__(**kwargs)
 
         self.input_fields = []
 
@@ -63,7 +59,7 @@ class Input(BoxLayout):
     def interpret_data(self, list_of_plants, sm, plant_boxes, plant_images, obj):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
-        from project.kivy_interface.main_screen_layout import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantButtons
         from project.kivy_interface.main_screen_layout import PlantImages
 
         new_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
@@ -73,7 +69,7 @@ class Input(BoxLayout):
         clear_file()
         store_data(list_of_plants.list)
         self.clear_input()
-        PlantBoxes.add_button(plant_boxes, list_of_plants, sm)
+        PlantButtons.add_button(plant_boxes, list_of_plants, sm)
         PlantImages.add_image(plant_images, list_of_plants)
         Manager.add_screen(sm, list_of_plants, plant_boxes, plant_images)
 
@@ -82,18 +78,15 @@ class Input(BoxLayout):
             self.input_fields[n].text = ""
 
 
-class AddPlantMenuBoxes(BoxLayout):
+class Menu(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, plant_input, plant_images, **kwargs):
-        super(AddPlantMenuBoxes, self).__init__(**kwargs)
+        super(Menu, self).__init__(**kwargs)
 
-        self.size_hint = (1.0, 0.05)
-        self.orientation = "horizontal"
-
-        self.back_button = Button(text="Back")
+        self.back_button = Button(text="Back", background_normal = "menu_button.png")
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
-        self.confirm_button = Button(text="Confirm")
-        self.confirm_button.fbind('on_press', Input.interpret_data, plant_input, list_of_plants, sm, plant_boxes, plant_images)
+        self.confirm_button = Button(text="Confirm", background_normal = "menu_button.png")
+        self.confirm_button.fbind('on_press', InputFields.interpret_data, plant_input, list_of_plants, sm, plant_boxes, plant_images)
 
         for but in [self.back_button, self.confirm_button]:
             self.add_widget(but)
@@ -103,17 +96,14 @@ class AddPlantHorizontal(BoxLayout):
 
     def __init__(self, plant_input,  **kwargs):
         super(AddPlantHorizontal, self).__init__(**kwargs)
-        self.spacing = 8
         self.add_widget(InputLabels())
         self.add_widget(plant_input)
 
 
-class AddPlantCombined(BoxLayout):
+class AddPlantCombinedLayout(BoxLayout):
 
     def __init__(self, list_of_plants, sm, plant_boxes, plant_images,  **kwargs):
-        super(AddPlantCombined, self).__init__(**kwargs)
-        self.spacing = 8
-        self.padding = [8, 8, 8, 8]
-        plant_input = Input()
+        super(AddPlantCombinedLayout, self).__init__(**kwargs)
+        plant_input = InputFields()
         self.add_widget(AddPlantHorizontal(plant_input))
-        self.add_widget(AddPlantMenuBoxes(list_of_plants, sm, plant_boxes, plant_input, plant_images))
+        self.add_widget(Menu(list_of_plants, sm, plant_boxes, plant_input, plant_images))

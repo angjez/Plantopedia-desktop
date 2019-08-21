@@ -1,17 +1,47 @@
-<MenuBoxes, AddPlantHorizontal>:
+# horizontal box layout
+<AddPlantHorizontal, DeleteMultipleCombined, EditPlantHorizontal>:
     orientation: "horizontal"
+    spacing: 8
+    padding: [8, 8, 8, 8]
 
     canvas:
         Rectangle:
             pos:self.pos
             size:self.size
-            source: 'background.jpg'
+            source: 'white_background.jpg'
 
-<CombineAllBoxes, AddPlantCombined, EditPlantCombined, DeleteMultipleBoxes, PlantBoxes, MainBoxes>:
+# vertical box layout
+<MainBoxes, AddPlantCombinedLayout, DeleteMultipleBoxes, EditPlantCombined, CombineAllBoxes>:
     orientation: "vertical"
+    spacing: 8
+    padding: [8, 8, 8, 8]
 
     canvas:
         Rectangle:
             pos:self.pos
             size:self.size
-            source: 'background.jpg'
+            source: 'white_background.jpg'
+
+# vertical box layout for widgets
+<PlantButtons, PlantImages, InputLabels, InputFields, DeleteMultipleCheckboxes, DeleteMultipleLabels, EditInput>:
+    orientation: "vertical"
+    spacing: 8
+
+    canvas:
+        Rectangle:
+            pos:self.pos
+            size:self.size
+            source: 'white_background.jpg'
+
+# menu box layout
+<Menu>:
+    size_hint: (1.0, 0.05)
+    orientation: "horizontal"
+    padding: [8, 0, 8, 0]
+    spacing: 8
+
+    canvas:
+        Rectangle:
+            pos:self.pos
+            size:self.size
+            source: 'white_background.jpg'
