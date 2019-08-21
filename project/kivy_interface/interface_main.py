@@ -24,10 +24,10 @@ class Manager(ScreenManager):
         self.add_widget(self.menu_screen)
         self.current = "Menu"
 
-    def push_plant_screens(self, list_of_plants, plant_boxes):
+    def push_plant_screens(self, list_of_plants, plant_boxes, plant_images):
         for n in range(len(list_of_plants.list)):
             from project.kivy_interface.plant_properties_screen_layout import CombineAllBoxes
-            self.list.append(CombineAllBoxes(list_of_plants.list[n], self, list_of_plants, plant_boxes))
+            self.list.append(CombineAllBoxes(list_of_plants.list[n], self, list_of_plants, plant_boxes, plant_images))
             self.screen.append(Screen(name=list_of_plants.list[n].common_name))
             self.screen[n].add_widget(self.list[n])
             self.add_widget(self.screen[n])
@@ -38,10 +38,10 @@ class Manager(ScreenManager):
     def goto_menu(self):
         self.current = "Menu"
 
-    def add_screen(self, list_of_plants, plant_boxes):
+    def add_screen(self, list_of_plants, plant_boxes, plant_images):
         from project.kivy_interface.plant_properties_screen_layout import CombineAllBoxes
         self.screen.append(Screen(name=list_of_plants.list[-1].common_name))
-        self.screen[-1].add_widget(CombineAllBoxes(list_of_plants.list[-1], self, list_of_plants, plant_boxes))
+        self.screen[-1].add_widget(CombineAllBoxes(list_of_plants.list[-1], self, list_of_plants, plant_boxes, plant_images))
         self.add_widget(self.screen[-1])
         self.current = list_of_plants.list[-1].common_name
 
@@ -94,7 +94,7 @@ class Manager(ScreenManager):
         AddPlant.name = "Add plant"
         self.current = "Add plant"
 
-    def add_edit_screen(self, list_of_plants, plant_boxes, obj):
+    def add_edit_screen(self, list_of_plants, plant_boxes, plant_images, obj):
         list_index = 0
         for n in range(len(list_of_plants.list)):
             if self.current == list_of_plants.list[n].common_name:
@@ -103,7 +103,7 @@ class Manager(ScreenManager):
             if self.screens[n].name == "Edit plant":
                 self.remove_widget(self.screens[n])
                 break
-        self.add_widget(EditPlantScreen(self, list_of_plants, list_index, plant_boxes))
+        self.add_widget(EditPlantScreen(self, list_of_plants, list_index, plant_boxes, plant_images))
         EditPlantScreen.name = "Edit plant"
         self.current = "Edit plant"
 
@@ -117,10 +117,10 @@ class AddPlant(Screen):
 
 
 class EditPlantScreen(Screen):
-    def __init__(self, sm, list_of_plants, index, plant_boxes, **kwargs):
+    def __init__(self, sm, list_of_plants, index, plant_boxes, plant_images, **kwargs):
         super(EditPlantScreen, self).__init__(**kwargs)
         from project.kivy_interface.edit_screen_layout import EditPlantCombined
-        edit_plant_page = EditPlantCombined(list_of_plants, sm, index, plant_boxes)
+        edit_plant_page = EditPlantCombined(list_of_plants, sm, index, plant_boxes, plant_images)
         self.add_widget(edit_plant_page)
 
 

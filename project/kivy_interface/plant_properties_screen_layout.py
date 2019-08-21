@@ -72,7 +72,7 @@ class PlantProperties(BoxLayout):
 
 
 class PlantMenuBoxes(BoxLayout):
-    def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
+    def __init__(self, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
         super(PlantMenuBoxes, self).__init__(**kwargs)
 
         self.orientation = "horizontal"
@@ -85,7 +85,7 @@ class PlantMenuBoxes(BoxLayout):
         self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes)
 
         self.edit_button = Button(text="Edit")
-        self.edit_button.fbind('on_press', Manager.add_edit_screen, sm, list_of_plants, plant_boxes)
+        self.edit_button.fbind('on_press', Manager.add_edit_screen, sm, list_of_plants, plant_boxes, plant_images)
 
         for but in [self.back_button, self.delete_button, self.edit_button]:
             self.add_widget(but)
@@ -94,16 +94,16 @@ class PlantMenuBoxes(BoxLayout):
 class CombineHorizontalBoxes(BoxLayout):
     def __init__(self, plant, **kwargs):
         super(CombineHorizontalBoxes, self).__init__(**kwargs)
-        orientation: "horizontal"
+        self.orientation = "horizontal"
         self.add_widget(FeatureLabels())
         self.add_widget(PlantProperties(plant))
 
 
 class CombineAllBoxes(BoxLayout):
-    def __init__(self, plant, sm, list_of_plants, plant_boxes, **kwargs):
+    def __init__(self, plant, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
         super(CombineAllBoxes, self).__init__(**kwargs)
         self.padding = [8, 8, 8, 8]
-        menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes)
+        menu_boxes = PlantMenuBoxes(sm, list_of_plants, plant_boxes, plant_images)
         self.add_widget(ImageCommonNameBotanicalName(plant))
         self.add_widget(CombineHorizontalBoxes(plant))
         self.add_widget(menu_boxes)

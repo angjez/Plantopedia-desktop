@@ -6,7 +6,7 @@ from project.kivy_interface.interface_main import Manager
 
 class PlantButton(Button):
     def on_size(self, *args):
-        self.size_hint = (1.0, 1.0)
+        self.size_hint = (1.0, 0.7)
         self.halign = "left"
         self.valign = "middle"
         self.padding_x = 100
@@ -39,17 +39,22 @@ class PlantImages(BoxLayout):
         self.spacing = 8
 
         self.images = []
+        self.captions = []
 
         for n in range(len(list_of_plants.list)):
             self.images.append(AsyncImage(source=list_of_plants.list[n].image, allow_stretch=True, keep_ratio=False))
+            self.captions.append(list_of_plants.list[n].common_name)
             self.add_widget(self.images[n])
 
-    def remove_image(self, index):
-        self.remove_widget(self.images[index])
+    def remove_image(self, caption):
+        for n in range(len(self.captions)):
+            if self.captions[n] == caption:
+                self.remove_widget(self.images[n])
 
     def add_image(self, list_of_plants):
         self.images.append(AsyncImage(source=list_of_plants.list[-1].image, allow_stretch=True, keep_ratio=False))
         self.add_widget(self.images[-1])
+        self.captions.append(list_of_plants.list[-1].common_name)
 
 
 class PlantBoxes(BoxLayout):
@@ -59,13 +64,13 @@ class PlantBoxes(BoxLayout):
         self.button = []
         self.spacing = 8
 
-    def initiate_buttons(self, list_of_plants, sm, plant_boxes):
+    def initiate_buttons(self, list_of_plants, sm, plant_boxes, plant_images):
         for n in range(len(list_of_plants.list)):
             self.button.append(PlantButton(text=list_of_plants.list[n].common_name))
             self.add_widget(self.button[n])
 
         # screen manager adds all of the screens for the buttons
-        Manager.push_plant_screens(sm, list_of_plants, plant_boxes)
+        Manager.push_plant_screens(sm, list_of_plants, plant_boxes, plant_images)
 
         # assigning screens to buttons
         for n in range(len(list_of_plants.list)):
@@ -89,10 +94,11 @@ class MainBoxes(BoxLayout):
         self.spacing = 8
         self.padding = [8, 8, 8, 8]
         plant_boxes = PlantBoxes()
+        plant_images = PlantImages(list_of_plants)
         menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)
-        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes)
+        PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes, plant_images)
         plant_boxes_and_images = BoxLayout(orientation='horizontal', padding=[8, 0, 8, 0], spacing=8)
         plant_boxes_and_images.add_widget(plant_boxes)
-        plant_boxes_and_images.add_widget(PlantImages(list_of_plants))
+        plant_boxes_and_images.add_widget(plant_images)
         self.add_widget(plant_boxes_and_images)
         self.add_widget(menu_boxes)
