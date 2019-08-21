@@ -7,7 +7,6 @@ from kivy.lang import Builder
 
 Builder.load_file('interface_main.kv')
 
-
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         from project.kivy_interface.main_screen_layout import MainBoxes
