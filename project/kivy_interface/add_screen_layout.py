@@ -60,10 +60,11 @@ class Input(BoxLayout):
         self.input_fields[6].hint_text = "size"
         self.input_fields[7].hint_text = "image url"
 
-    def interpret_data(self, list_of_plants, sm, plant_boxes, obj):
+    def interpret_data(self, list_of_plants, sm, plant_boxes, plant_images, obj):
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         from project.kivy_interface.main_screen_layout import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantImages
 
         new_plant = Plant(self.input_fields[0].text, self.input_fields[1].text, self.input_fields[2].text, self.input_fields[3].text, self.input_fields[4].text,
                           self.input_fields[5].text, self.input_fields[6].text, self.input_fields[7].text)
@@ -73,7 +74,8 @@ class Input(BoxLayout):
         store_data(list_of_plants.list)
         self.clear_input()
         PlantBoxes.add_button(plant_boxes, list_of_plants, sm)
-        Manager.add_screen(sm, list_of_plants, plant_boxes)
+        PlantImages.add_image(plant_images, list_of_plants)
+        Manager.add_screen(sm, list_of_plants, plant_boxes, plant_images)
 
     def clear_input(self):
         for n in range(0, 8):
@@ -81,7 +83,7 @@ class Input(BoxLayout):
 
 
 class AddPlantMenuBoxes(BoxLayout):
-    def __init__(self, list_of_plants, sm, plant_boxes, plant_input, **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, plant_input, plant_images, **kwargs):
         super(AddPlantMenuBoxes, self).__init__(**kwargs)
 
         self.size_hint = (1.0, 0.05)
@@ -91,7 +93,7 @@ class AddPlantMenuBoxes(BoxLayout):
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         self.confirm_button = Button(text="Confirm")
-        self.confirm_button.fbind('on_press', Input.interpret_data, plant_input, list_of_plants, sm, plant_boxes)
+        self.confirm_button.fbind('on_press', Input.interpret_data, plant_input, list_of_plants, sm, plant_boxes, plant_images)
 
         for but in [self.back_button, self.confirm_button]:
             self.add_widget(but)
@@ -108,10 +110,10 @@ class AddPlantHorizontal(BoxLayout):
 
 class AddPlantCombined(BoxLayout):
 
-    def __init__(self, list_of_plants, sm, plant_boxes,  **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, plant_images,  **kwargs):
         super(AddPlantCombined, self).__init__(**kwargs)
         self.spacing = 8
         self.padding = [8, 8, 8, 8]
         plant_input = Input()
         self.add_widget(AddPlantHorizontal(plant_input))
-        self.add_widget(AddPlantMenuBoxes(list_of_plants, sm, plant_boxes, plant_input))
+        self.add_widget(AddPlantMenuBoxes(list_of_plants, sm, plant_boxes, plant_input, plant_images))

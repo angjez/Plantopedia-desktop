@@ -16,13 +16,13 @@ class PlantButton(Button):
 
 
 class MenuBoxes(BoxLayout):
-    def __init__(self, list_of_plants, sm, plant_boxes, **kwargs):
+    def __init__(self, list_of_plants, sm, plant_boxes, plant_images, **kwargs):
         super(MenuBoxes, self).__init__(**kwargs)
 
         self.size_hint = (1.0, 0.05)
 
         self.add_button = Button(text="Add")
-        self.add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes)
+        self.add_button.fbind('on_press', Manager.add_plant_screen, sm, list_of_plants, plant_boxes, plant_images)
 
         self.delete_button = Button(text="Delete")
         self.delete_button.fbind('on_press', Manager.delete_multiple_screens, sm, list_of_plants, plant_boxes)
@@ -95,7 +95,7 @@ class MainBoxes(BoxLayout):
         self.padding = [8, 8, 8, 8]
         plant_boxes = PlantBoxes()
         plant_images = PlantImages(list_of_plants)
-        menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes)
+        menu_boxes = MenuBoxes(list_of_plants, sm, plant_boxes, plant_images)
         PlantBoxes.initiate_buttons(plant_boxes, list_of_plants, sm, plant_boxes, plant_images)
         plant_boxes_and_images = BoxLayout(orientation='horizontal', padding=[8, 0, 8, 0], spacing=8)
         plant_boxes_and_images.add_widget(plant_boxes)

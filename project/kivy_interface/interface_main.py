@@ -12,13 +12,10 @@ Builder.load_file('interface_main.kv')
 
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
+        from project.kivy_interface.main_screen_layout import MainBoxes
         super(Manager, self).__init__(**kwargs)
         self.list = []
         self.screen = []
-        self.initiate_menu_screen(list_of_plants)
-
-    def initiate_menu_screen(self, list_of_plants):
-        from project.kivy_interface.main_screen_layout import MainBoxes
         self.menu_screen = Screen(name="Menu")
         self.menu_screen.add_widget(MainBoxes(list_of_plants, self))
         self.add_widget(self.menu_screen)
@@ -45,14 +42,16 @@ class Manager(ScreenManager):
         self.add_widget(self.screen[-1])
         self.current = list_of_plants.list[-1].common_name
 
-    def delete_plant(self, list_of_plants, plant_boxes, obj):
+    def delete_plant(self, list_of_plants, plant_boxes, plant_images, obj):
         from project.app.plant_list import ListOfPlants
         from project.kivy_interface.main_screen_layout import PlantBoxes
+        from project.kivy_interface.main_screen_layout import PlantImages
         from project.app.pickle_data import store_data
         from project.app.pickle_data import clear_file
         screen_to_delete = self.current
         ListOfPlants.delete_from_list(list_of_plants, screen_to_delete)
         PlantBoxes.remove_button(plant_boxes, screen_to_delete)
+        PlantImages.remove_image(plant_images, screen_to_delete)
         # updating the file after changing the list of plants
         clear_file()
         store_data(list_of_plants.list)
@@ -85,13 +84,13 @@ class Manager(ScreenManager):
         DeleteMultiple.name = "Delete multiple"
         self.current = "Delete multiple"
 
-    def add_plant_screen(self, list_of_plants, plant_boxes, obj):
+    def add_plant_screen(self, list_of_plants, plant_boxes, plant_images, obj):
         for n in range(len(self.screens)):
             if self.screens[n].name == "Add plant":
                 self.current = "Add plant"
                 return 0
-        self.add_widget(AddPlant(self, list_of_plants, plant_boxes))
-        AddPlant.name = "Add plant"
+        self.add_widget(AddPlantScreen(self, list_of_plants, plant_boxes, plant_images))
+        AddPlantScreen.name = "Add plant"
         self.current = "Add plant"
 
     def add_edit_screen(self, list_of_plants, plant_boxes, plant_images, obj):
@@ -108,11 +107,11 @@ class Manager(ScreenManager):
         self.current = "Edit plant"
 
 
-class AddPlant(Screen):
-    def __init__(self, sm, list_of_plants, plant_boxes, **kwargs):
-        super(AddPlant, self).__init__(**kwargs)
+class AddPlantScreen(Screen):
+    def __init__(self, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
+        super(AddPlantScreen, self).__init__(**kwargs)
         from project.kivy_interface.add_screen_layout import AddPlantCombined
-        new_plant_page = AddPlantCombined(list_of_plants, sm, plant_boxes)
+        new_plant_page = AddPlantCombined(list_of_plants, sm, plant_boxes, plant_images)
         self.add_widget(new_plant_page)
 
 

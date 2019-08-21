@@ -82,7 +82,7 @@ class PlantMenuBoxes(BoxLayout):
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
         self.delete_button = Button(text="Delete")
-        self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes)
+        self.delete_button.fbind('on_press', Manager.delete_plant, sm, list_of_plants, plant_boxes, plant_images)
 
         self.edit_button = Button(text="Edit")
         self.edit_button.fbind('on_press', Manager.add_edit_screen, sm, list_of_plants, plant_boxes, plant_images)
