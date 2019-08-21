@@ -2,7 +2,7 @@
 <AddPlantHorizontal, DeleteMultipleCombined, EditPlantHorizontal>:
     orientation: "horizontal"
     spacing: 8
-    padding: [8, 8, 8, 8]
+    padding: [16, 16, 16, 16]
 
     canvas.before:
         Color:
@@ -15,7 +15,7 @@
 <MainBoxes, AddPlantCombinedLayout, DeleteMultipleBoxes, EditPlantCombined, CombineAllBoxes>:
     orientation: "vertical"
     spacing: 8
-    padding: [8, 8, 8, 8]
+    padding: [16, 16, 16, 16]
 
     canvas.before:
         Color:
@@ -25,9 +25,20 @@
             size: self.size
 
 # vertical box layout for widgets
-<PlantButtons, PlantImages, InputLabels, InputFields, DeleteMultipleCheckboxes, DeleteMultipleLabels, EditInput>:
+<InputLabels, InputFields, DeleteMultipleCheckboxes, DeleteMultipleLabels, EditInput>:
     orientation: "vertical"
     spacing: 8
+
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<PlantButtons, PlantImages>:
+    orientation: "vertical"
+    spacing: 20
 
     canvas.before:
         Color:
