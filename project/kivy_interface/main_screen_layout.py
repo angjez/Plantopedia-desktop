@@ -85,8 +85,6 @@ class PlantButtons(BoxLayout):
 class MainBoxes(BoxLayout):
     def __init__(self, list_of_plants, sm, **kwargs):
         super(MainBoxes, self).__init__(**kwargs)
-        self.spacing = 8
-        self.padding = [8, 8, 8, 8]
         plant_boxes = PlantButtons()
         plant_images = PlantImages(list_of_plants)
         menu_boxes = Menu(list_of_plants, sm, plant_boxes, plant_images)

@@ -82,10 +82,10 @@ class Menu(BoxLayout):
     def __init__(self, list_of_plants, sm, plant_boxes, plant_input, plant_images, **kwargs):
         super(Menu, self).__init__(**kwargs)
 
-        self.back_button = Button(text="Back", background_normal = "menu_button.png")
+        self.back_button = Button(text="Back", background_normal="menu_button.png")
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
 
-        self.confirm_button = Button(text="Confirm", background_normal = "menu_button.png")
+        self.confirm_button = Button(text="Confirm", background_normal="menu_button.png")
         self.confirm_button.fbind('on_press', InputFields.interpret_data, plant_input, list_of_plants, sm, plant_boxes, plant_images)
 
         for but in [self.back_button, self.confirm_button]:
@@ -93,7 +93,6 @@ class Menu(BoxLayout):
 
 
 class AddPlantHorizontal(BoxLayout):
-
     def __init__(self, plant_input,  **kwargs):
         super(AddPlantHorizontal, self).__init__(**kwargs)
         self.add_widget(InputLabels())
@@ -101,7 +100,6 @@ class AddPlantHorizontal(BoxLayout):
 
 
 class AddPlantCombinedLayout(BoxLayout):
-
     def __init__(self, list_of_plants, sm, plant_boxes, plant_images,  **kwargs):
         super(AddPlantCombinedLayout, self).__init__(**kwargs)
         plant_input = InputFields()

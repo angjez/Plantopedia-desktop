@@ -75,7 +75,7 @@ class Menu(BoxLayout):
     def __init__(self, sm, list_of_plants, plant_boxes, plant_images, **kwargs):
         super(Menu, self).__init__(**kwargs)
 
-        self.size_hint = (1.0, 0.07)
+        self.size_hint = (1.0, 0.08)
 
         self.back_button = Button(text="Back", background_normal = "menu_button.png")
         self.back_button.bind(on_press=lambda x: Manager.goto_menu(sm))
