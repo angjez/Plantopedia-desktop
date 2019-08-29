@@ -7,6 +7,7 @@ from kivy.lang import Builder
 
 Builder.load_file('interface_main.kv')
 
+
 class Manager(ScreenManager):
     def __init__(self, list_of_plants, **kwargs):
         from project.kivy_interface.main_screen_layout import MainBoxes
@@ -102,6 +103,12 @@ class Manager(ScreenManager):
         self.add_widget(EditPlantScreen(self, list_of_plants, list_index, plant_boxes, plant_images))
         EditPlantScreen.name = "Edit plant"
         self.current = "Edit plant"
+
+    def refresh_add_screen(self):
+        self.goto_menu()
+        for screen in range(len(self.screens)):
+            if self.screens[screen].name == "Add plant":
+                self.remove_widget(self.screens[screen])
 
 
 class AddPlantScreen(Screen):

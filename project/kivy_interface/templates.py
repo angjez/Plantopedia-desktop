@@ -72,6 +72,6 @@ class InputLabel(Label):
 # text input
 class InputField(TextInput):
     def on_size(self, *args):
-        self.background_color = (0.5, 0.5, 0.5, 0.3)
+        self.background_normal = "button_down.png"
         self.multiline = True
         self.hint_text_color = (0, 0, 0, 0.5)
